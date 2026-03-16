@@ -1,0 +1,24 @@
+from functools import reduce  
+
+
+def get_geometric_mean_for_three_numbers(a, b, c): 
+    if not all(isinstance(x, (int, float)) for x in [a, b, c]):
+        raise TypeError("All inputs must be integers or floats")
+    return (a*b*c)**(1/2)
+
+
+def get_geometric_mean(*nums: float) -> float: 
+    """ 
+    Get the geometric mean of a sequence of numbers  
+    """ 
+
+    if not len(nums):  
+        raise ValueError("Cannot calculate the geometric mean of an empty sequence") 
+
+    product = reduce(lambda a, b: a * b, nums) 
+    if product < 0 and len(nums) % 2 == 0: 
+        raise ValueError("Cannot calculate the geometric mean") 
+
+    return pow(product, 1 / len(nums))
+
+
