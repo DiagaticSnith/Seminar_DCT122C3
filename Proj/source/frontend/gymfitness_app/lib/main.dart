@@ -5,6 +5,7 @@ import 'providers/profile_provider.dart';
 import 'providers/tracking_provider.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/main_layout.dart';
+import 'screens/onboarding/onboarding_screen.dart';
 import 'utils/constants.dart';
 
 void main() {
@@ -41,6 +42,9 @@ class GymFitnessApp extends StatelessWidget {
       home: Consumer<AuthProvider>(
         builder: (context, auth, _) {
           if (auth.isAuthenticated) {
+            if (auth.isNewUser) {
+              return OnboardingScreen();
+            }
             return const MainLayoutScreen();
           }
           return const LoginScreen();
