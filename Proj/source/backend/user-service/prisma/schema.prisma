@@ -1,0 +1,29 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma/client"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model UserProfile {
+  id           String   @id @default(uuid())
+  userId       String   @unique // Reference to Identity Service User
+  height       Float    // in cm
+  weight       Float    // in kg
+  age          Int
+  gender       String   // "M" or "F"
+  activityLevel String  // "Sedentary", "Light", "Moderate", "Very", "Extra"
+  workoutStyle String   // e.g. "Bodybuilding", "Cardio", "Calisthenics"
+  goal         String   // "Fat Loss", "Muscle Gain", "Maintenance"
+  
+  targetCalories Int?
+  targetProtein  Int?
+  targetCarbs    Int?
+  targetFat      Int?
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

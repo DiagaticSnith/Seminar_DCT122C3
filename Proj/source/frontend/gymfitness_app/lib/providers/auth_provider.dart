@@ -6,10 +6,17 @@ import '../services/api_client.dart';
 class AuthProvider with ChangeNotifier {
   bool _isAuthenticated = false;
   bool _isLoading = false;
+  bool _isNewUser = false;
   String? _token;
 
   bool get isAuthenticated => _isAuthenticated;
   bool get isLoading => _isLoading;
+  bool get isNewUser => _isNewUser;
+
+  void completeOnboarding() {
+    _isNewUser = false;
+    notifyListeners();
+  }
 
   AuthProvider() {
     _checkAuth();
@@ -64,6 +71,7 @@ class AuthProvider with ChangeNotifier {
       });
 
       if (response.statusCode == 201) {
+        _isNewUser = true;
         _isLoading = false;
         notifyListeners();
         return await login(email, password); // Auto-login after registration
