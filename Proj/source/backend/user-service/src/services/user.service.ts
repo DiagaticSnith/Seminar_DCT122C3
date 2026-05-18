@@ -62,4 +62,8 @@ export class UserService {
 
     return profile;
   }
+
+  async getMetrics(userId: string) {
+    return prisma.userProfile.findUnique({ where: { userId } });
+  }
 }

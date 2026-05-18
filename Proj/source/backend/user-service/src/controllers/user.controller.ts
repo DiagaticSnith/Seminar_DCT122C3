@@ -15,4 +15,14 @@ export class UserController {
       next(error);
     }
   }
+
+  async getMetrics(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.query.userId as string || 'test-user-id';
+      const profile = await userService.getMetrics(userId);
+      res.json(profile);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
