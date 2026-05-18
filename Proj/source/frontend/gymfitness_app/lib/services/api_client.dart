@@ -1,9 +1,16 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiClient {
-  static const String baseUrl = 'http://10.0.2.2:3000'; // For Android emulator. Adjust if iOS/Web.
+  static String get baseUrl {
+    if (kIsWeb) {
+      return 'http://127.0.0.1:3000';
+    }
+    // Android emulator uses 10.0.2.2. iOS/Desktop uses 127.0.0.1.
+    return 'http://10.0.2.2:3000'; 
+  }
 
   static Future<http.Response> post(String endpoint, Map<String, dynamic> body) async {
     final prefs = await SharedPreferences.getInstance();

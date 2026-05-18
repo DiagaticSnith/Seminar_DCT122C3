@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
+import 'providers/profile_provider.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/main_layout.dart';
+import 'screens/onboarding/onboarding_screen.dart';
 import 'utils/constants.dart';
 
 void main() {
@@ -10,6 +12,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => ProfileProvider()),
       ],
       child: const GymFitnessApp(),
     ),
@@ -37,6 +40,9 @@ class GymFitnessApp extends StatelessWidget {
       home: Consumer<AuthProvider>(
         builder: (context, auth, _) {
           if (auth.isAuthenticated) {
+            if (auth.isNewUser) {
+              return OnboardingScreen();
+            }
             return const MainLayoutScreen();
           }
           return const LoginScreen();
