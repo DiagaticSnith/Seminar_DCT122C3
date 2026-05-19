@@ -384,14 +384,10 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-<<<<<<< Updated upstream
-  UserProfile: 'UserProfile'
-=======
   UserProfile: 'UserProfile',
   DailyMealPlan: 'DailyMealPlan',
   SystemPrompt: 'SystemPrompt',
   AiActivityLog: 'AiActivityLog'
->>>>>>> Stashed changes
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -407,11 +403,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-<<<<<<< Updated upstream
-    modelProps: "userProfile"
-=======
     modelProps: "userProfile" | "dailyMealPlan" | "systemPrompt" | "aiActivityLog"
->>>>>>> Stashed changes
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -489,8 +481,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-<<<<<<< Updated upstream
-=======
     DailyMealPlan: {
       payload: Prisma.$DailyMealPlanPayload<ExtArgs>
       fields: Prisma.DailyMealPlanFieldRefs
@@ -713,7 +703,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
->>>>>>> Stashed changes
   }
 } & {
   other: {
@@ -763,10 +752,7 @@ export const UserProfileScalarFieldEnum = {
   activityLevel: 'activityLevel',
   workoutStyle: 'workoutStyle',
   goal: 'goal',
-<<<<<<< Updated upstream
-=======
   diet: 'diet',
->>>>>>> Stashed changes
   targetCalories: 'targetCalories',
   targetProtein: 'targetProtein',
   targetCarbs: 'targetCarbs',
@@ -778,8 +764,6 @@ export const UserProfileScalarFieldEnum = {
 export type UserProfileScalarFieldEnum = (typeof UserProfileScalarFieldEnum)[keyof typeof UserProfileScalarFieldEnum]
 
 
-<<<<<<< Updated upstream
-=======
 export const DailyMealPlanScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -817,7 +801,6 @@ export const AiActivityLogScalarFieldEnum = {
 export type AiActivityLogScalarFieldEnum = (typeof AiActivityLogScalarFieldEnum)[keyof typeof AiActivityLogScalarFieldEnum]
 
 
->>>>>>> Stashed changes
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -826,8 +809,6 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-<<<<<<< Updated upstream
-=======
 export const JsonNullValueInput = {
   JsonNull: JsonNull
 } as const
@@ -835,7 +816,6 @@ export const JsonNullValueInput = {
 export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
->>>>>>> Stashed changes
 export const QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -852,8 +832,6 @@ export const NullsOrder = {
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
-<<<<<<< Updated upstream
-=======
 export const JsonNullValueFilter = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -863,7 +841,6 @@ export const JsonNullValueFilter = {
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
->>>>>>> Stashed changes
 
 /**
  * Field references
@@ -925,8 +902,6 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
 
-<<<<<<< Updated upstream
-=======
 
 /**
  * Reference to a field of type 'Json'
@@ -941,7 +916,6 @@ export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'J
 export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
->>>>>>> Stashed changes
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -1053,12 +1027,9 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   userProfile?: Prisma.UserProfileOmit
-<<<<<<< Updated upstream
-=======
   dailyMealPlan?: Prisma.DailyMealPlanOmit
   systemPrompt?: Prisma.SystemPromptOmit
   aiActivityLog?: Prisma.AiActivityLogOmit
->>>>>>> Stashed changes
 }
 
 /* Types for Logging */

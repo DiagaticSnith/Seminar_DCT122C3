@@ -1,9 +1,5 @@
-<<<<<<< Updated upstream
 import 'dotenv/config';
 import { PrismaClient } from '../generated/prisma/client/client';
-=======
-import { PrismaClient } from '../generated/prisma/client/index';
->>>>>>> Stashed changes
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
 import bcrypt from 'bcrypt';

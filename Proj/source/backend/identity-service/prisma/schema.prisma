@@ -1,12 +1,7 @@
 generator client {
-<<<<<<< Updated upstream
   provider     = "prisma-client"
   output       = "../src/generated/prisma/client"
   moduleFormat = "cjs"
-=======
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma/client"
->>>>>>> Stashed changes
 }
 
 datasource db {
