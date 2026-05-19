@@ -67,8 +67,8 @@ export class TrackingController {
   async logCustom(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const userId = req.user.userId;
-      const { name, calories, protein, carbs, fat } = req.body;
-      const result = await trackingService.logCustom(userId, { name, calories, protein, carbs, fat });
+      const { name, calories, protein, carbs, fat, grams } = req.body;
+      const result = await trackingService.logCustom(userId, { name, calories, protein, carbs, fat, grams });
       res.json(result);
     } catch (e) { next(e); }
   }

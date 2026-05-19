@@ -13,11 +13,40 @@ export class TrackingService {
     if (foodCount === 0) {
       await prisma.masterFood.createMany({
         data: [
-          { name: 'Grilled Chicken Breast', baseServingSize: 100, baseCalories: 165, baseProtein: 31, baseCarbs: 0, baseFat: 3.6 },
-          { name: 'Brown Rice (Cooked)', baseServingSize: 100, baseCalories: 112, baseProtein: 2.6, baseCarbs: 23.5, baseFat: 0.9 },
-          { name: 'Avocado', baseServingSize: 100, baseCalories: 160, baseProtein: 2, baseCarbs: 8.5, baseFat: 14.7 },
-          { name: 'Whey Protein Isolate', baseServingSize: 30, baseCalories: 120, baseProtein: 25, baseCarbs: 1, baseFat: 0.5 },
-          { name: 'Oatmeal', baseServingSize: 100, baseCalories: 68, baseProtein: 2.4, baseCarbs: 12, baseFat: 1.4 },
+          { name: 'Grilled Chicken Breast', baseServingSize: 100, baseCalories: 165, baseProtein: 31.0, baseCarbs: 0.0, baseFat: 3.6 },
+          { name: 'Grilled Sirloin Steak', baseServingSize: 100, baseCalories: 244, baseProtein: 27.0, baseCarbs: 0.0, baseFat: 15.0 },
+          { name: 'Baked Salmon Fillet', baseServingSize: 100, baseCalories: 206, baseProtein: 22.0, baseCarbs: 0.0, baseFat: 13.0 },
+          { name: 'Canned Tuna (in Water)', baseServingSize: 100, baseCalories: 116, baseProtein: 26.0, baseCarbs: 0.0, baseFat: 1.0 },
+          { name: 'Boiled Whole Egg', baseServingSize: 100, baseCalories: 155, baseProtein: 13.0, baseCarbs: 1.1, baseFat: 11.0 },
+          { name: 'Liquid Egg Whites', baseServingSize: 100, baseCalories: 52, baseProtein: 11.0, baseCarbs: 0.7, baseFat: 0.2 },
+          { name: 'Whey Protein Isolate', baseServingSize: 30, baseCalories: 120, baseProtein: 25.0, baseCarbs: 1.0, baseFat: 0.5 },
+          { name: 'Greek Yogurt (0% Fat)', baseServingSize: 100, baseCalories: 59, baseProtein: 10.0, baseCarbs: 3.6, baseFat: 0.4 },
+          { name: 'Cottage Cheese (Low Fat)', baseServingSize: 100, baseCalories: 84, baseProtein: 11.0, baseCarbs: 4.3, baseFat: 2.3 },
+          { name: 'Firm Tofu', baseServingSize: 100, baseCalories: 144, baseProtein: 17.0, baseCarbs: 2.8, baseFat: 8.7 },
+          { name: 'Cooked Brown Rice', baseServingSize: 100, baseCalories: 112, baseProtein: 2.6, baseCarbs: 23.5, baseFat: 0.9 },
+          { name: 'Cooked Jasmine Rice', baseServingSize: 100, baseCalories: 130, baseProtein: 2.7, baseCarbs: 28.0, baseFat: 0.3 },
+          { name: 'Baked Sweet Potato', baseServingSize: 100, baseCalories: 86, baseProtein: 1.6, baseCarbs: 20.0, baseFat: 0.1 },
+          { name: 'Raw Rolled Oats', baseServingSize: 100, baseCalories: 389, baseProtein: 16.9, baseCarbs: 66.3, baseFat: 6.9 },
+          { name: 'Cooked Quinoa', baseServingSize: 100, baseCalories: 120, baseProtein: 4.4, baseCarbs: 21.3, baseFat: 1.9 },
+          { name: 'Whole Wheat Bread (1 slice)', baseServingSize: 100, baseCalories: 247, baseProtein: 13.0, baseCarbs: 41.0, baseFat: 3.4 },
+          { name: 'White Bread (1 slice)', baseServingSize: 100, baseCalories: 265, baseProtein: 9.0, baseCarbs: 49.0, baseFat: 3.2 },
+          { name: 'Fresh Banana', baseServingSize: 100, baseCalories: 89, baseProtein: 1.1, baseCarbs: 22.8, baseFat: 0.3 },
+          { name: 'Fresh Red Apple', baseServingSize: 100, baseCalories: 52, baseProtein: 0.3, baseCarbs: 13.8, baseFat: 0.2 },
+          { name: 'Fresh Blueberries', baseServingSize: 100, baseCalories: 57, baseProtein: 0.7, baseCarbs: 14.5, baseFat: 0.3 },
+          { name: 'Fresh Avocado', baseServingSize: 100, baseCalories: 160, baseProtein: 2.0, baseCarbs: 8.5, baseFat: 14.7 },
+          { name: 'Raw Almonds', baseServingSize: 100, baseCalories: 579, baseProtein: 21.2, baseCarbs: 21.6, baseFat: 49.9 },
+          { name: 'Natural Peanut Butter', baseServingSize: 100, baseCalories: 588, baseProtein: 25.0, baseCarbs: 20.0, baseFat: 50.0 },
+          { name: 'Extra Virgin Olive Oil', baseServingSize: 100, baseCalories: 884, baseProtein: 0.0, baseCarbs: 0.0, baseFat: 100.0 },
+          { name: 'Steamed Broccoli', baseServingSize: 100, baseCalories: 35, baseProtein: 2.4, baseCarbs: 7.0, baseFat: 0.4 },
+          { name: 'Raw Baby Spinach', baseServingSize: 100, baseCalories: 23, baseProtein: 2.9, baseCarbs: 3.6, baseFat: 0.4 },
+          { name: 'Skimmed Milk', baseServingSize: 100, baseCalories: 35, baseProtein: 3.4, baseCarbs: 5.0, baseFat: 0.1 },
+          { name: 'Whole Milk', baseServingSize: 100, baseCalories: 61, baseProtein: 3.2, baseCarbs: 4.8, baseFat: 3.3 },
+          { name: 'Chicken Breast Stir-Fry', baseServingSize: 100, baseCalories: 140, baseProtein: 18.0, baseCarbs: 6.0, baseFat: 5.0 },
+          { name: 'Chocolate Protein Bar', baseServingSize: 60, baseCalories: 220, baseProtein: 20.0, baseCarbs: 24.0, baseFat: 7.0 },
+          { name: 'Lean Ground Turkey', baseServingSize: 100, baseCalories: 149, baseProtein: 24.0, baseCarbs: 0.0, baseFat: 6.0 },
+          { name: 'Baked Tilapia Fillet', baseServingSize: 100, baseCalories: 128, baseProtein: 26.0, baseCarbs: 0.0, baseFat: 2.7 },
+          { name: 'Organic Chia Seeds', baseServingSize: 100, baseCalories: 486, baseProtein: 16.5, baseCarbs: 42.1, baseFat: 30.7 },
+          { name: 'Raw Walnuts', baseServingSize: 100, baseCalories: 654, baseProtein: 15.2, baseCarbs: 13.7, baseFat: 65.2 }
         ]
       });
     }
@@ -26,18 +55,50 @@ export class TrackingService {
     if (exCount === 0) {
       await prisma.masterExercise.createMany({
         data: [
-          // Bodybuilding / Gym
+          // Chest
           { name: 'Barbell Bench Press', category: 'Chest', tags: ['Gym', 'Bodybuilding'], youtubeLink: 'https://www.youtube.com/watch?v=vcBig73ojpE' },
-          { name: 'Barbell Squat', category: 'Legs', tags: ['Gym', 'Bodybuilding'], youtubeLink: 'https://www.youtube.com/watch?v=bEv6CCg2BC8' },
-          { name: 'Dumbbell Shoulder Press', category: 'Shoulders', tags: ['Gym', 'Bodybuilding'], youtubeLink: 'https://www.youtube.com/watch?v=qEwKCR5JCog' },
+          { name: 'Incline Dumbbell Press', category: 'Chest', tags: ['Gym', 'Bodybuilding'], youtubeLink: 'https://www.youtube.com/watch?v=0G2_XV7slIg' },
+          { name: 'Flat Dumbbell Fly', category: 'Chest', tags: ['Gym', 'Bodybuilding'], youtubeLink: 'https://www.youtube.com/watch?v=eozdVDA78K0' },
+          { name: 'Standard Push-Ups', category: 'Chest', tags: ['Home', 'Calisthenics', 'Beginner'], youtubeLink: 'https://www.youtube.com/watch?v=IODxDxX7oi4' },
+          { name: 'Chest Dips', category: 'Chest', tags: ['Gym', 'Calisthenics'], youtubeLink: 'https://www.youtube.com/watch?v=2z8JmcrW-As' },
+          // Back
           { name: 'Lat Pulldown', category: 'Back', tags: ['Gym', 'Bodybuilding'], youtubeLink: 'https://www.youtube.com/watch?v=EUIri47Epcg' },
-          // Yoga
-          { name: 'Sun Salutation (Surya Namaskar)', category: 'Full Body', tags: ['Yoga', 'Home'], youtubeLink: 'https://www.youtube.com/watch?v=1WbjJ8YJjbg' },
-          { name: 'Downward Dog Pose', category: 'Flexibility', tags: ['Yoga', 'Home'], youtubeLink: 'https://www.youtube.com/watch?v=EC7RGJ975iM' },
-          { name: 'Warrior II Pose', category: 'Legs', tags: ['Yoga', 'Home'], youtubeLink: 'https://www.youtube.com/watch?v=4EjG7mNGz08' },
+          { name: 'Barbell Bent Over Row', category: 'Back', tags: ['Gym', 'Bodybuilding'], youtubeLink: 'https://www.youtube.com/watch?v=kBWAon7ItDw' },
+          { name: 'One-Arm Dumbbell Row', category: 'Back', tags: ['Gym', 'Bodybuilding'], youtubeLink: 'https://www.youtube.com/watch?v=pYcpY20QaE8' },
+          { name: 'Pull-ups', category: 'Back', tags: ['Gym', 'Calisthenics'], youtubeLink: 'https://www.youtube.com/watch?v=eGo4IYlbE5g' },
+          { name: 'Seated Cable Row', category: 'Back', tags: ['Gym', 'Bodybuilding'], youtubeLink: 'https://www.youtube.com/watch?v=xQNrFHEMhI4' },
+          { name: 'Conventional Deadlift', category: 'Back', tags: ['Gym', 'Bodybuilding'], youtubeLink: 'https://www.youtube.com/watch?v=op9kVnSso6Q' },
+          // Legs
+          { name: 'Barbell Squat', category: 'Legs', tags: ['Gym', 'Bodybuilding'], youtubeLink: 'https://www.youtube.com/watch?v=bEv6CCg2BC8' },
+          { name: 'Romanian Deadlift', category: 'Legs', tags: ['Gym', 'Bodybuilding'], youtubeLink: 'https://www.youtube.com/watch?v=XxWcirHIwVo' },
+          { name: 'Leg Press', category: 'Legs', tags: ['Gym'], youtubeLink: 'https://www.youtube.com/watch?v=IZxyjW7MPJQ' },
+          { name: 'Lying Leg Curl', category: 'Legs', tags: ['Gym'], youtubeLink: 'https://www.youtube.com/watch?v=Orxowest56U' },
+          { name: 'Walking Lunges', category: 'Legs', tags: ['Gym', 'Home'], youtubeLink: 'https://www.youtube.com/watch?v=D7KaRcUTQeE' },
+          { name: 'Standing Calf Raises', category: 'Legs', tags: ['Gym', 'Home', 'Calisthenics'], youtubeLink: 'https://www.youtube.com/watch?v=YMmgqO8Jo-k' },
+          { name: 'Bodyweight Air Squats', category: 'Legs', tags: ['Home', 'Calisthenics', 'Beginner'], youtubeLink: 'https://www.youtube.com/watch?v=aclHkVaku9U' },
+          // Shoulders
+          { name: 'Overhead Barbell Press', category: 'Shoulders', tags: ['Gym', 'Bodybuilding'], youtubeLink: 'https://www.youtube.com/watch?v=2yjwXTZQDDI' },
+          { name: 'Dumbbell Lateral Raise', category: 'Shoulders', tags: ['Gym', 'Home'], youtubeLink: 'https://www.youtube.com/watch?v=kDqklk1ZESo' },
+          { name: 'Dumbbell Shoulder Press', category: 'Shoulders', tags: ['Gym', 'Home'], youtubeLink: 'https://www.youtube.com/watch?v=qEwKCR5JCog' },
+          { name: 'Face Pulls', category: 'Shoulders', tags: ['Gym'], youtubeLink: 'https://www.youtube.com/watch?v=HSoHeSjvIdY' },
+          // Arms
+          { name: 'Barbell Bicep Curl', category: 'Arms', tags: ['Gym', 'Bodybuilding'], youtubeLink: 'https://www.youtube.com/watch?v=QZEqB6wUPxQ' },
+          { name: 'Incline Dumbbell Bicep Curl', category: 'Arms', tags: ['Gym'], youtubeLink: 'https://www.youtube.com/watch?v=aTYlqC_JacQ' },
+          { name: 'Tricep Rope Pushdown', category: 'Arms', tags: ['Gym'], youtubeLink: 'https://www.youtube.com/watch?v=kiuVA0gs3EI' },
+          { name: 'Tricep Overhead Extension', category: 'Arms', tags: ['Gym', 'Home'], youtubeLink: 'https://www.youtube.com/watch?v=YbX7Wd8jQ-Q' },
           // Cardio
           { name: 'HIIT Sprint Intervals', category: 'Cardio', tags: ['Cardio', 'Home'], youtubeLink: 'https://www.youtube.com/watch?v=ml6cT4AZdqI' },
           { name: 'Jump Rope', category: 'Cardio', tags: ['Cardio', 'Home'], youtubeLink: 'https://www.youtube.com/watch?v=u3zgHI8QnqE' },
+          { name: 'Burpees', category: 'Cardio', tags: ['Cardio', 'Home', 'Calisthenics'], youtubeLink: 'https://www.youtube.com/watch?v=dZgVxmf6jkA' },
+          { name: 'Treadmill Run', category: 'Cardio', tags: ['Gym', 'Cardio'], youtubeLink: 'https://www.youtube.com/watch?v=_kGESn8ArrU' },
+          { name: 'Stationary Bike', category: 'Cardio', tags: ['Gym', 'Cardio'], youtubeLink: 'https://www.youtube.com/watch?v=fQqndzvURAU' },
+          // Yoga
+          { name: 'Sun Salutation (Surya Namaskar)', category: 'Yoga', tags: ['Yoga', 'Home', 'Beginner'], youtubeLink: 'https://www.youtube.com/watch?v=73sjOu0g58M' },
+          { name: 'Downward Dog Pose', category: 'Yoga', tags: ['Yoga', 'Home', 'Beginner'], youtubeLink: 'https://www.youtube.com/watch?v=Y0GDgQqt-bA' },
+          { name: 'Warrior II Pose', category: 'Yoga', tags: ['Yoga', 'Home'], youtubeLink: 'https://www.youtube.com/watch?v=4Ejz7IgODlU' },
+          { name: 'Child\'s Pose', category: 'Yoga', tags: ['Yoga', 'Home', 'Beginner'], youtubeLink: 'https://www.youtube.com/watch?v=2MJGg-dUKh0' },
+          { name: 'Tree Pose', category: 'Yoga', tags: ['Yoga', 'Home'], youtubeLink: 'https://www.youtube.com/watch?v=wdln9qWYloU' },
+          { name: 'Cobra Pose (Bhujangasana)', category: 'Yoga', tags: ['Yoga', 'Home', 'Beginner'], youtubeLink: 'https://www.youtube.com/watch?v=Y8UNFem5qHc' }
         ]
       });
     }
@@ -423,9 +484,9 @@ export class TrackingService {
 
   async logCustom(
     userId: string,
-    data: { name: string; calories: number; protein: number; carbs: number; fat: number }
+    data: { name: string; calories: number; protein: number; carbs: number; fat: number; grams?: number }
   ) {
-    const { name, calories, protein, carbs, fat } = data;
+    const { name, calories, protein, carbs, fat, grams = 100 } = data;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -461,7 +522,7 @@ export class TrackingService {
         data: {
           dailyLogId: dailyLog.id,
           foodId: food.id,
-          grams: 100,
+          grams,
           calories,
           protein,
           carbs,

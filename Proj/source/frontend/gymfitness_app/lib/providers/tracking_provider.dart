@@ -23,12 +23,12 @@ class TrackingProvider with ChangeNotifier {
   Map<String, dynamic>? get aiMealPlan => _aiMealPlan;
 
   String get _trackingServiceUrl {
-    if (kIsWeb) return 'http://127.0.0.1:3002';
+    if (kIsWeb) return 'http://localhost:3002';
     return 'http://10.0.2.2:3002';
   }
 
   String get _aiCoachServiceUrl {
-    if (kIsWeb) return 'http://127.0.0.1:3003';
+    if (kIsWeb) return 'http://localhost:3003';
     return 'http://10.0.2.2:3003';
   }
 
@@ -230,6 +230,7 @@ class TrackingProvider with ChangeNotifier {
 
   Future<bool> logCustomFood({
     required String name,
+    double? grams,
     required double calories,
     required double protein,
     required double carbs,
@@ -251,6 +252,7 @@ class TrackingProvider with ChangeNotifier {
         },
         body: jsonEncode({
           'name': name,
+          if (grams != null) 'grams': grams,
           'calories': calories,
           'protein': protein,
           'carbs': carbs,

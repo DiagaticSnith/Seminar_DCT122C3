@@ -4,7 +4,6 @@ import '../../providers/profile_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/chat_provider.dart';
 import '../../providers/tracking_provider.dart';
-import '../main_layout.dart';
 
 class OnboardingScreen extends StatefulWidget {
   @override
@@ -14,13 +13,14 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final _formKey = GlobalKey<FormState>();
   
-  double _height = 170;
-  double _weight = 70;
-  int _age = 25;
-  String _gender = 'M';
-  String _activityLevel = 'Moderate';
-  String _workoutStyle = 'Bodybuilding';
-  String _goal = 'Muscle Gain';
+  double? _height;
+  double? _weight;
+  int? _age;
+  String? _gender;
+  String? _activityLevel;
+  String? _workoutStyle;
+  String? _goal;
+  String? _diet;
 
   void _submit() async {
     if (!_formKey.currentState!.validate()) return;
@@ -34,10 +34,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       'activityLevel': _activityLevel,
       'workoutStyle': _workoutStyle,
       'goal': _goal,
+      'diet': _diet ?? 'Balanced',
     };
 
     final provider = Provider.of<ProfileProvider>(context, listen: false);
-    
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     
     try {
@@ -87,15 +87,27 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text('Let’s personalize your experience!', style: TextStyle(color: Colors.white70, fontSize: 16)),
+                    const Text('Let’s personalize your experience!', style: TextStyle(color: Colors.white70, fontSize: 16)),
                     const SizedBox(height: 20),
                     
                     // Height & Weight
                     Row(
                       children: [
-                        Expanded(child: _buildNumberField('Height (cm)', (val) => _height = double.parse(val!), _height.toString())),
+                        Expanded(
+                          child: _buildNumberField(
+                            'Height (cm)',
+                            (val) => _height = double.parse(val!),
+                            _height == null ? '' : _height!.toString(),
+                          ),
+                        ),
                         const SizedBox(width: 16),
-                        Expanded(child: _buildNumberField('Weight (kg)', (val) => _weight = double.parse(val!), _weight.toString())),
+                        Expanded(
+                          child: _buildNumberField(
+                            'Weight (kg)',
+                            (val) => _weight = double.parse(val!),
+                            _weight == null ? '' : _weight!.toString(),
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 16),
@@ -103,16 +115,27 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     // Age & Gender
                     Row(
                       children: [
-                        Expanded(child: _buildNumberField('Age', (val) => _age = int.parse(val!), _age.toString())),
+                        Expanded(
+                          child: _buildNumberField(
+                            'Age',
+                            (val) => _age = int.parse(val!),
+                            _age == null ? '' : _age!.toString(),
+                          ),
+                        ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: DropdownButtonFormField<String>(
                             value: _gender,
+                            hint: const Text('Select Gender', style: TextStyle(color: Colors.white30, fontSize: 14)),
                             dropdownColor: Colors.grey[900],
                             decoration: _inputDecoration('Gender'),
                             style: const TextStyle(color: Colors.white),
-                            items: ['M', 'F'].map((g) => DropdownMenuItem(value: g, child: Text(g))).toList(),
-                            onChanged: (val) => setState(() => _gender = val!),
+                            items: const [
+                              DropdownMenuItem(value: 'M', child: Text('M')),
+                              DropdownMenuItem(value: 'F', child: Text('F')),
+                            ],
+                            validator: (val) => val == null ? 'Required' : null,
+                            onChanged: (val) => setState(() => _gender = val),
                           ),
                         ),
                       ],
@@ -122,36 +145,56 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     // Activity Level
                     DropdownButtonFormField<String>(
                       value: _activityLevel,
+                      hint: const Text('Select Activity Level', style: TextStyle(color: Colors.white30, fontSize: 14)),
                       dropdownColor: Colors.grey[900],
                       decoration: _inputDecoration('Activity Level'),
                       style: const TextStyle(color: Colors.white),
                       items: ['Sedentary', 'Light', 'Moderate', 'Very', 'Extra']
                           .map((g) => DropdownMenuItem(value: g, child: Text(g))).toList(),
-                      onChanged: (val) => setState(() => _activityLevel = val!),
+                      validator: (val) => val == null ? 'Required' : null,
+                      onChanged: (val) => setState(() => _activityLevel = val),
                     ),
                     const SizedBox(height: 16),
 
                     // Workout Style
                     DropdownButtonFormField<String>(
                       value: _workoutStyle,
+                      hint: const Text('Select Workout Style', style: TextStyle(color: Colors.white30, fontSize: 14)),
                       dropdownColor: Colors.grey[900],
                       decoration: _inputDecoration('Workout Style'),
                       style: const TextStyle(color: Colors.white),
-                      items: ['Bodybuilding', 'Cardio', 'Yoga', 'Calisthenics']
+                      items: ['Bodybuilding', 'Cardio', 'Yoga', 'Calisthenics', 'Diet Only']
                           .map((g) => DropdownMenuItem(value: g, child: Text(g))).toList(),
-                      onChanged: (val) => setState(() => _workoutStyle = val!),
+                      validator: (val) => val == null ? 'Required' : null,
+                      onChanged: (val) => setState(() => _workoutStyle = val),
                     ),
                     const SizedBox(height: 16),
 
                     // Goal
                     DropdownButtonFormField<String>(
                       value: _goal,
+                      hint: const Text('Select Goal', style: TextStyle(color: Colors.white30, fontSize: 14)),
                       dropdownColor: Colors.grey[900],
                       decoration: _inputDecoration('Goal'),
                       style: const TextStyle(color: Colors.white),
                       items: ['Fat Loss', 'Muscle Gain', 'Maintenance']
                           .map((g) => DropdownMenuItem(value: g, child: Text(g))).toList(),
-                      onChanged: (val) => setState(() => _goal = val!),
+                      validator: (val) => val == null ? 'Required' : null,
+                      onChanged: (val) => setState(() => _goal = val),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Diet Type
+                    DropdownButtonFormField<String>(
+                      value: _diet,
+                      hint: const Text('Select Diet Type', style: TextStyle(color: Colors.white30, fontSize: 14)),
+                      dropdownColor: Colors.grey[900],
+                      decoration: _inputDecoration('Diet Type'),
+                      style: const TextStyle(color: Colors.white),
+                      items: ['Balanced', 'Low Carb', 'Keto', 'Vegan', 'Vegetarian']
+                          .map((g) => DropdownMenuItem(value: g, child: Text(g))).toList(),
+                      validator: (val) => val == null ? 'Required' : null,
+                      onChanged: (val) => setState(() => _diet = val),
                     ),
                     const SizedBox(height: 32),
 
@@ -174,11 +217,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Widget _buildNumberField(String label, Function(String?) onSave, String initial) {
     return TextFormField(
-      initialValue: initial,
+      initialValue: initial.isEmpty ? null : initial,
       keyboardType: TextInputType.number,
       style: const TextStyle(color: Colors.white),
       decoration: _inputDecoration(label),
-      validator: (value) => value!.isEmpty ? 'Required' : null,
+      validator: (value) {
+        if (value == null || value.isEmpty) return 'Required';
+        if (double.tryParse(value) == null) return 'Invalid number';
+        return null;
+      },
       onSaved: onSave,
     );
   }

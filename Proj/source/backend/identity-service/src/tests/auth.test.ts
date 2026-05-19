@@ -1,9 +1,9 @@
 import request from 'supertest';
 import app from '../app';
-import { PrismaClient } from '../generated/prisma/client/index';
+import { PrismaClient } from '../generated/prisma/client/client';
 import bcrypt from 'bcrypt';
 
-jest.mock('../generated/prisma/client/index', () => {
+jest.mock('../generated/prisma/client/client', () => {
   const mPrismaClient = {
     user: {
       findUnique: jest.fn(),

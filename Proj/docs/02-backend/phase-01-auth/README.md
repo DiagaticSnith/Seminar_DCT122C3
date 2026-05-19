@@ -4,11 +4,11 @@
 Establish the Express/TypeScript backend foundation and fully implement the `identity-service`.
 
 ## 2. Requirements Mapping
-- **US01:** Implement user registration and login via Email/Password or Google Auth.
+- **US01:** Implement user registration and login via Email/Password.
 - **FR01 (Account Management):** Provide secure session management.
 
 ## 3. Technical Implementation Details
-- Ensure strict adherence to `docs/05-skills/backend.md`.
+- Ensure strict adherence to `skills/backend.md`.
 - Passwords must be hashed using `bcrypt` prior to database insertion.
 - Generate standard JWTs containing the `userId` and expiration timestamp.
 - Implement a global authentication middleware to protect subsequent routes.

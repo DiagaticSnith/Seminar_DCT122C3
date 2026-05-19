@@ -2,7 +2,7 @@
 
 ## Domain 1: Authentication & User Management
 **Objective:** Handle secure system access, session lifecycles, and foundational account security.
-- **US01:** As a user, I want to register/login using Email/Password or Google Auth so my personal data is synchronized and securely stored.
+- **US01:** As a user, I want to register/login using Email/Password so my personal data is synchronized and securely stored.
 - **FR01 (Account Management):** The system must provide secure registration, login, and robust session management.
 
 ## Domain 2: User Profile & Calculation Engine

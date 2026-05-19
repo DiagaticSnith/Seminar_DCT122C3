@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 16),
               const Text(
-                'Welcome to Your',
+                'Welcome to',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 28,
@@ -68,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const Text(
-                'Virtual PT',
+                'GymFitness',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 32,

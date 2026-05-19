@@ -12,7 +12,7 @@ class ProfileProvider with ChangeNotifier {
   Map<String, dynamic>? get profileData => _profileData;
 
   String get _userServiceUrl {
-    if (kIsWeb) return 'http://127.0.0.1:3001';
+    if (kIsWeb) return 'http://localhost:3001';
     return 'http://10.0.2.2:3001';
   }
 

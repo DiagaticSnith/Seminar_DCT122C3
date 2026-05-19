@@ -364,6 +364,7 @@ class _ChatScreenState extends State<ChatScreen> {
               final workoutStyle = profileProvider.profileData?['workoutStyle'] ?? 'Bodybuilding';
 
               final name = data['foodName'] ?? 'Food Estimate';
+              final double? grams = data['grams'] != null ? (data['grams'] as num).toDouble() : null;
               final double kcal = (data['estimatedCalories'] ?? 0).toDouble();
               final double p = (data['estimatedProtein'] ?? 0).toDouble();
               final double c = (data['estimatedCarbs'] ?? 0).toDouble();
@@ -371,6 +372,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
               final success = await trackingProvider.logCustomFood(
                 name: name,
+                grams: grams,
                 calories: kcal,
                 protein: p,
                 carbs: c,

@@ -48,16 +48,16 @@ class _HomeScreenState extends State<HomeScreen> {
     final schedule = trackingProvider.schedule;
     final analytics = trackingProvider.analyticsLogs;
 
-    final targetCal = (profile['targetCalories'] ?? 2500).toDouble();
+    final targetCal = (profile['targetCalories'] ?? 0).toDouble();
     final consumedCal = (dailyLog['caloriesConsumed'] ?? 0).toDouble();
 
-    final targetP = (profile['targetProtein'] ?? 150).toDouble();
+    final targetP = (profile['targetProtein'] ?? 0).toDouble();
     final consumedP = (dailyLog['proteinConsumed'] ?? 0).toDouble();
 
-    final targetC = (profile['targetCarbs'] ?? 250).toDouble();
+    final targetC = (profile['targetCarbs'] ?? 0).toDouble();
     final consumedC = (dailyLog['carbsConsumed'] ?? 0).toDouble();
 
-    final targetF = (profile['targetFat'] ?? 70).toDouble();
+    final targetF = (profile['targetFat'] ?? 0).toDouble();
     final consumedF = (dailyLog['fatConsumed'] ?? 0).toDouble();
 
     final workoutStyle = profile['workoutStyle'] ?? 'None';
@@ -193,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       : ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: schedule.length,
+                          itemCount: schedule.length > 6 ? 6 : schedule.length,
                           separatorBuilder: (_, __) => const SizedBox(height: 12),
                           itemBuilder: (context, index) {
                             final item = schedule[index];

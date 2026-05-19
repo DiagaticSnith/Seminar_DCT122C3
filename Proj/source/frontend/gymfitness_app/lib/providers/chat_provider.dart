@@ -28,7 +28,7 @@ class ChatMessage {
 
 class ChatProvider extends ChangeNotifier {
   static String get _socketUrl {
-    if (kIsWeb) return 'http://127.0.0.1:3003';
+    if (kIsWeb) return 'http://localhost:3003';
     return 'http://10.0.2.2:3003';
   }
 

@@ -5,9 +5,9 @@ GymFitness-AI follows a Microservices Architecture pattern. The backend is split
 
 ## 2. Microservices Components
 1. **API Gateway:** The single entry point for the frontend. Handles rate limiting, request routing, and WebSocket connections for chat.
-2. **Identity Service:** Manages user authentication (Email/Google Auth) and JWT session lifecycle.
+2. **Identity Service:** Manages user authentication and JWT session lifecycle.
 3. **User Service:** Manages onboarding metrics (Height, Weight, Workout Style) and acts as the Calculation Engine (BMR/TDEE math).
-4. **Workout & Tracking Service:** Manages the Master Data (Dictionaries) and Daily Logs (food/water intake, workout check-ins).
+4. **Workout & Tracking Service:** Manages the Master Data (Dictionaries) and Daily Logs (food intake, workout check-ins).
 5. **AI-Coach Service:** The LLM integration layer. Manages prompts, chat context history, and JSON enforcement.
 
 ## 3. Non-Functional Requirements (NFRs) Enforcement

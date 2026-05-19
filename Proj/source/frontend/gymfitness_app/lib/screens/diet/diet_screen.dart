@@ -17,6 +17,8 @@ class _DietScreenState extends State<DietScreen> {
   String _searchQuery = '';
   bool _isInit = false;
   bool _isGeneratingMealPlan = false;
+  int _currentPage = 0;
+  static const int _itemsPerPage = 10;
 
   @override
   void didChangeDependencies() {
@@ -43,6 +45,11 @@ class _DietScreenState extends State<DietScreen> {
       final name = (item['name'] ?? '').toString().toLowerCase();
       return name.contains(_searchQuery.toLowerCase());
     }).toList();
+
+    final totalPages = (foodItems.length / _itemsPerPage).ceil();
+    final startIndex = _currentPage * _itemsPerPage;
+    final endIndex = (startIndex + _itemsPerPage) > foodItems.length ? foodItems.length : (startIndex + _itemsPerPage);
+    final paginatedFoodItems = foodItems.isEmpty ? <dynamic>[] : foodItems.sublist(startIndex, endIndex);
 
     final dailyLog = trackingProvider.dailyLog ?? {};
     final foodLogs = (dailyLog['foodLogs'] as List<dynamic>?) ?? [];
@@ -81,7 +88,10 @@ class _DietScreenState extends State<DietScreen> {
                         icon: const Icon(Icons.clear, color: AppColors.textGrey),
                         onPressed: () {
                           _searchController.clear();
-                          setState(() => _searchQuery = '');
+                          setState(() {
+                            _searchQuery = '';
+                            _currentPage = 0;
+                          });
                         },
                       )
                     : null,
@@ -96,7 +106,10 @@ class _DietScreenState extends State<DietScreen> {
                   borderSide: const BorderSide(color: AppColors.neonGreen),
                 ),
               ),
-              onChanged: (val) => setState(() => _searchQuery = val),
+              onChanged: (val) => setState(() {
+                _searchQuery = val;
+                _currentPage = 0;
+              }),
             ),
           ),
 
@@ -166,16 +179,70 @@ class _DietScreenState extends State<DietScreen> {
                       padding: EdgeInsets.symmetric(vertical: 40.0),
                       child: Center(child: Text('No food items found', style: TextStyle(color: AppColors.textGrey))),
                     )
-                  : ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-                      itemCount: foodItems.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 12),
-                      itemBuilder: (context, index) {
-                        final item = foodItems[index];
-                        return _buildFoodCard(context, item, workoutStyle);
-                      },
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                          itemCount: paginatedFoodItems.length,
+                          separatorBuilder: (_, __) => const SizedBox(height: 12),
+                          itemBuilder: (context, index) {
+                            final item = paginatedFoodItems[index];
+                            return _buildFoodCard(context, item, workoutStyle);
+                          },
+                        ),
+                        if (totalPages > 1) ...[
+                          const SizedBox(height: 16),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.inputBackground,
+                                    foregroundColor: Colors.white,
+                                    disabledBackgroundColor: AppColors.inputBackground.withOpacity(0.3),
+                                    disabledForegroundColor: Colors.white30,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      side: const BorderSide(color: AppColors.darkGreenBorder),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                  ),
+                                  onPressed: _currentPage > 0
+                                      ? () => setState(() => _currentPage--)
+                                      : null,
+                                  child: const Text('Previous', style: TextStyle(fontWeight: FontWeight.bold)),
+                                ),
+                                Text(
+                                  'Page ${_currentPage + 1} of $totalPages',
+                                  style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.inputBackground,
+                                    foregroundColor: Colors.white,
+                                    disabledBackgroundColor: AppColors.inputBackground.withOpacity(0.3),
+                                    disabledForegroundColor: Colors.white30,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      side: const BorderSide(color: AppColors.darkGreenBorder),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                  ),
+                                  onPressed: _currentPage < totalPages - 1
+                                      ? () => setState(() => _currentPage++)
+                                      : null,
+                                  child: const Text('Next', style: TextStyle(fontWeight: FontWeight.bold)),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
         ],
       ),
