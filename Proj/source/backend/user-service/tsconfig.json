@@ -2,11 +2,7 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "CommonJS",
-<<<<<<< Updated upstream
-    "moduleResolution": "node16",
-=======
     "moduleResolution": "node",
->>>>>>> Stashed changes
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,

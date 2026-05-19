@@ -51,14 +51,10 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-<<<<<<< Updated upstream
-  UserProfile: 'UserProfile'
-=======
   UserProfile: 'UserProfile',
   DailyMealPlan: 'DailyMealPlan',
   SystemPrompt: 'SystemPrompt',
   AiActivityLog: 'AiActivityLog'
->>>>>>> Stashed changes
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -87,10 +83,7 @@ export const UserProfileScalarFieldEnum = {
   activityLevel: 'activityLevel',
   workoutStyle: 'workoutStyle',
   goal: 'goal',
-<<<<<<< Updated upstream
-=======
   diet: 'diet',
->>>>>>> Stashed changes
   targetCalories: 'targetCalories',
   targetProtein: 'targetProtein',
   targetCarbs: 'targetCarbs',
@@ -102,8 +95,6 @@ export const UserProfileScalarFieldEnum = {
 export type UserProfileScalarFieldEnum = (typeof UserProfileScalarFieldEnum)[keyof typeof UserProfileScalarFieldEnum]
 
 
-<<<<<<< Updated upstream
-=======
 export const DailyMealPlanScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -141,7 +132,6 @@ export const AiActivityLogScalarFieldEnum = {
 export type AiActivityLogScalarFieldEnum = (typeof AiActivityLogScalarFieldEnum)[keyof typeof AiActivityLogScalarFieldEnum]
 
 
->>>>>>> Stashed changes
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -150,8 +140,6 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-<<<<<<< Updated upstream
-=======
 export const JsonNullValueInput = {
   JsonNull: JsonNull
 } as const
@@ -159,7 +147,6 @@ export const JsonNullValueInput = {
 export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
->>>>>>> Stashed changes
 export const QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -175,8 +162,6 @@ export const NullsOrder = {
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
-<<<<<<< Updated upstream
-=======
 
 export const JsonNullValueFilter = {
   DbNull: DbNull,
@@ -186,4 +171,3 @@ export const JsonNullValueFilter = {
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
->>>>>>> Stashed changes

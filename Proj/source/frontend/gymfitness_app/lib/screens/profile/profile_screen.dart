@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
-<<<<<<< Updated upstream
-import '../onboarding/onboarding_screen.dart';
-=======
 import '../../providers/profile_provider.dart';
 import '../../providers/tracking_provider.dart';
 import '../../providers/chat_provider.dart';
 import '../../utils/constants.dart';
->>>>>>> Stashed changes
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -92,9 +88,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< Updated upstream
-    return OnboardingScreen();
-=======
     final profile = context.watch<ProfileProvider>().profileData;
     final isLoading = context.watch<ProfileProvider>().isLoading;
 
@@ -301,7 +294,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
     );
->>>>>>> Stashed changes
   }
 
   Widget _macroTarget(String value, String label, Color color) {

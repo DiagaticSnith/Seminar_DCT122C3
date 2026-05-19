@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/profile_provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/chat_provider.dart';
+import '../../providers/tracking_provider.dart';
 import '../main_layout.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -67,7 +69,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              context.read<AuthProvider>().logout();
+              context.read<AuthProvider>().logout(
+                context.read<ChatProvider>(),
+                context.read<TrackingProvider>(),
+                context.read<ProfileProvider>(),
+              );
             },
           )
         ],

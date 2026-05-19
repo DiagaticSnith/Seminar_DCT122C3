@@ -35,28 +35,16 @@ describe('User Service - TC-CALC-01', () => {
     // 800 + 1125 - 150 + 5 = 1780
     // TDEE = 1780 * 1.55 = 2759
     // Goal: Fat Loss -> Calories = 2759 - 500 = 2259
-<<<<<<< Updated upstream
-    // Protein (40%): 2259 * 0.4 / 4 = 226
-    // Carbs (30%): 2259 * 0.3 / 4 = 169
-    // Fat (30%): 2259 * 0.3 / 9 = 75
-=======
     // Protein: 80 * 2.2 = 176g
     // Fat: 2259 * 0.25 / 9 = 63g
     // Carbs: (2259 - 176*4 - 63*9) / 4 = 247g
->>>>>>> Stashed changes
 
     const profile = await userService.updateMetrics('user-1', data);
 
     expect(profile.targetCalories).toBe(2259);
-<<<<<<< Updated upstream
-    expect(profile.targetProtein).toBe(226);
-    expect(profile.targetCarbs).toBe(169);
-    expect(profile.targetFat).toBe(75);
-=======
     expect(profile.targetProtein).toBe(176);
     expect(profile.targetCarbs).toBe(247);
     expect(profile.targetFat).toBe(63);
->>>>>>> Stashed changes
   });
 
   it('should calculate BMR and Macros accurately for a Female (Muscle Gain)', async () => {
@@ -74,27 +62,15 @@ describe('User Service - TC-CALC-01', () => {
     // 600 + 1000 - 125 - 161 = 1314
     // TDEE = 1314 * 1.375 = 1807
     // Goal: Muscle Gain -> Calories = 1807 + 500 = 2307
-<<<<<<< Updated upstream
-    // Protein (30%): 2307 * 0.3 / 4 = 173
-    // Carbs (50%): 2307 * 0.5 / 4 = 288
-    // Fat (20%): 2307 * 0.2 / 9 = 51
-=======
     // Protein: 60 * 2.0 = 120g
     // Fat: 2307 * 0.25 / 9 = 64g
     // Carbs: (2307 - 120*4 - 64*9) / 4 = 313g
->>>>>>> Stashed changes
 
     const profile = await userService.updateMetrics('user-2', data);
 
     expect(profile.targetCalories).toBe(2307);
-<<<<<<< Updated upstream
-    expect(profile.targetProtein).toBe(173);
-    expect(profile.targetCarbs).toBe(288);
-    expect(profile.targetFat).toBe(51);
-=======
     expect(profile.targetProtein).toBe(120);
     expect(profile.targetCarbs).toBe(313);
     expect(profile.targetFat).toBe(64);
->>>>>>> Stashed changes
   });
 });
