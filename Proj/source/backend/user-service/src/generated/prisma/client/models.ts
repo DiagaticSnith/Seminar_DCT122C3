@@ -9,4 +9,10 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/UserProfile'
+<<<<<<< Updated upstream
+=======
+export type * from './models/DailyMealPlan'
+export type * from './models/SystemPrompt'
+export type * from './models/AiActivityLog'
+>>>>>>> Stashed changes
 export type * from './commonInputTypes'

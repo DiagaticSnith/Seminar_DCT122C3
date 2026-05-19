@@ -105,7 +105,8 @@ export const DailyLogScalarFieldEnum = {
   caloriesConsumed: 'caloriesConsumed',
   proteinConsumed: 'proteinConsumed',
   carbsConsumed: 'carbsConsumed',
-  fatConsumed: 'fatConsumed'
+  fatConsumed: 'fatConsumed',
+  weight: 'weight'
 } as const
 
 export type DailyLogScalarFieldEnum = (typeof DailyLogScalarFieldEnum)[keyof typeof DailyLogScalarFieldEnum]

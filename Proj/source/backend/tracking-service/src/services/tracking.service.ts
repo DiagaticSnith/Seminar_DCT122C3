@@ -53,11 +53,38 @@ export class TrackingService {
     return prisma.masterFood.findMany();
   }
 
-  async logFood(userId: string, foodId: string, grams: number) {
+  async logFood(
+    userId: string,
+    foodId: string | undefined,
+    grams: number,
+    customFood?: { name: string; calories: number; protein: number; carbs: number; fat: number }
+  ) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const food = await prisma.masterFood.findUnique({ where: { id: foodId } });
+    let food;
+    if (foodId) {
+      food = await prisma.masterFood.findUnique({ where: { id: foodId } });
+    } else if (customFood) {
+      // Find or dynamically create the food item in the master dictionary
+      food = await prisma.masterFood.findFirst({
+        where: { name: { equals: customFood.name, mode: 'insensitive' } }
+      });
+      if (!food) {
+        // Base serving size defaults to 100g, and we scale the macros so base values represent 100g serving
+        food = await prisma.masterFood.create({
+          data: {
+            name: customFood.name,
+            baseServingSize: 100,
+            baseCalories: customFood.calories,
+            baseProtein: customFood.protein,
+            baseCarbs: customFood.carbs,
+            baseFat: customFood.fat
+          }
+        });
+      }
+    }
+
     if (!food) throw new Error("Food not found");
 
     const ratio = grams / food.baseServingSize;
@@ -81,7 +108,7 @@ export class TrackingService {
       await tx.foodLog.create({
         data: {
           dailyLogId: dailyLog.id,
-          foodId,
+          foodId: food.id,
           grams,
           calories,
           protein,
@@ -102,7 +129,15 @@ export class TrackingService {
     });
   }
 
-  async checkinWorkout(workoutLogId: string) {
+  async checkinWorkout(userId: string, workoutLogId: string) {
+    const log = await prisma.workoutLog.findFirst({
+      where: {
+        id: workoutLogId,
+        dailyLog: { userId }
+      }
+    });
+    if (!log) throw new Error("Workout log not found or unauthorized");
+
     return prisma.workoutLog.update({
       where: { id: workoutLogId },
       data: { completed: true }
@@ -132,8 +167,8 @@ export class TrackingService {
       });
     }
 
-    if (dailyLog.workoutLogs.length === 0) {
-      // Find exercises matching workoutStyle (or default to Bodybuilding)
+    if (dailyLog.workoutLogs.length === 0 && workoutStyle !== 'None' && workoutStyle !== 'Diet Only') {
+      // Find exercises matching workoutStyle
       const styleTag = workoutStyle === 'Yoga' ? 'Yoga' : workoutStyle === 'Cardio' ? 'Cardio' : 'Bodybuilding';
       const exercises = await prisma.masterExercise.findMany({
         where: { tags: { has: styleTag } }
@@ -142,7 +177,7 @@ export class TrackingService {
       for (const ex of exercises) {
         await prisma.workoutLog.create({
           data: {
-            dailyLogId: dailyLog.id,
+            dailyLogId: dailyLog!.id,
             exerciseId: ex.id,
             sets: styleTag === 'Yoga' ? 1 : 4,
             reps: styleTag === 'Yoga' ? 1 : 12,
@@ -152,7 +187,7 @@ export class TrackingService {
 
       // Reload dailyLog
       dailyLog = await prisma.dailyLog.findUnique({
-        where: { id: dailyLog.id },
+        where: { id: dailyLog!.id },
         include: {
           workoutLogs: { include: { exercise: true } },
           foodLogs: { include: { food: true } }
@@ -185,22 +220,265 @@ export class TrackingService {
     };
   }
 
-  async getAnalytics(userId: string) {
+  async swapExercise(userId: string, swapFrom: string, swapTo: string) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Automatically initialize schedule if not present yet to avoid race conditions
+    await this.getSchedule(userId, 'Bodybuilding');
+
+    const dailyLog = await prisma.dailyLog.findUnique({
+      where: { userId_date: { userId, date: today } }
+    });
+    if (!dailyLog) throw new Error("Daily log not found");
+
+    const workoutLogs = await prisma.workoutLog.findMany({
+      where: { dailyLogId: dailyLog.id },
+      include: { exercise: true }
+    });
+
+    // 1. Exact Name Match
+    let targetLog = workoutLogs.find(
+      log => log.exercise.name.toLowerCase() === swapFrom.toLowerCase()
+    );
+
+    // 2. Fuzzy Name Match (contains)
+    if (!targetLog) {
+      targetLog = workoutLogs.find(
+        log => log.exercise.name.toLowerCase().includes(swapFrom.toLowerCase()) ||
+               swapFrom.toLowerCase().includes(log.exercise.name.toLowerCase())
+      );
+    }
+
+    // 3. Category Match (if swapFrom matches or contains the category, e.g. "Shoulder exercises" matches category "Shoulders")
+    if (!targetLog) {
+      targetLog = workoutLogs.find(
+        log => {
+          const category = log.exercise.category.toLowerCase();
+          const cleanSwapFrom = swapFrom.toLowerCase();
+          return category.includes(cleanSwapFrom) || 
+                 cleanSwapFrom.includes(category) ||
+                 category.replace(/s$/, '').includes(cleanSwapFrom.replace(/s$/, '')) ||
+                 cleanSwapFrom.replace(/s$/, '').includes(category.replace(/s$/, ''));
+        }
+      );
+    }
+
+    // 4. Word-by-word Match on name/category (fallback)
+    if (!targetLog) {
+      const swapFromWords = swapFrom.toLowerCase().split(/\s+/).filter(w => w.length > 3);
+      targetLog = workoutLogs.find(
+        log => {
+          const name = log.exercise.name.toLowerCase();
+          const category = log.exercise.category.toLowerCase();
+          return swapFromWords.some(word => name.includes(word) || category.includes(word));
+        }
+      );
+    }
+
+    if (!targetLog) throw new Error(`Exercise '${swapFrom}' not found in today's workout`);
+
+    // Fuzzy matching for swapTo
+    let newExercise = await prisma.masterExercise.findFirst({
+      where: { name: { equals: swapTo, mode: 'insensitive' } }
+    });
+
+    if (!newExercise) {
+      newExercise = await prisma.masterExercise.findFirst({
+        where: { name: { contains: swapTo, mode: 'insensitive' } }
+      });
+    }
+
+    if (!newExercise) {
+      let category = targetLog.exercise.category; // fallback
+      const nameLower = swapTo.toLowerCase();
+      
+      if (nameLower.includes('leg') || nameLower.includes('squat') || nameLower.includes('lung') || nameLower.includes('calf') || nameLower.includes('quad') || nameLower.includes('hamstring')) {
+        category = 'Legs';
+      } else if (nameLower.includes('chest') || nameLower.includes('bench') || nameLower.includes('pushup') || nameLower.includes('fly') || nameLower.includes('pec')) {
+        category = 'Chest';
+      } else if (nameLower.includes('shoulder') || nameLower.includes('overhead') || nameLower.includes('press') || nameLower.includes('lateral') || nameLower.includes('deltoid')) {
+        category = 'Shoulders';
+      } else if (nameLower.includes('back') || nameLower.includes('row') || nameLower.includes('pull') || nameLower.includes('deadlift') || nameLower.includes('lats')) {
+        category = 'Back';
+      } else if (nameLower.includes('cardio') || nameLower.includes('sprint') || nameLower.includes('run') || nameLower.includes('jump') || nameLower.includes('rope') || nameLower.includes('treadmill')) {
+        category = 'Cardio';
+      } else if (nameLower.includes('yoga') || nameLower.includes('pose') || nameLower.includes('stretch') || nameLower.includes('flex')) {
+        category = 'Flexibility';
+      }
+
+      newExercise = await prisma.masterExercise.create({
+        data: {
+          name: swapTo,
+          category,
+          tags: category === 'Cardio' ? ['Cardio', 'Home'] : category === 'Flexibility' ? ['Yoga', 'Home'] : ['Gym', 'Bodybuilding'],
+          youtubeLink: null
+        }
+      });
+    }
+
+    return prisma.workoutLog.update({
+      where: { id: targetLog.id },
+      data: { exerciseId: newExercise.id },
+      include: { exercise: true }
+    });
+  }
+
+  async getAnalytics(userId: string, token?: string) {
+    let currentWeight = 70.0;
+    let targetCalories = 2500;
+
+    if (token) {
+      try {
+        const response = await fetch('http://localhost:3001/api/user/me/metrics', {
+          headers: {
+            'Authorization': token
+          }
+        });
+        if (response.ok) {
+          const profile: any = await response.json();
+          currentWeight = profile.weight || 70.0;
+          targetCalories = profile.targetCalories || 2500;
+        }
+      } catch (err) {
+        console.error("Failed to fetch user metrics in getAnalytics:", err);
+      }
+    }
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const thirtyDaysAgo = new Date(today);
     thirtyDaysAgo.setDate(today.getDate() - 30);
 
-    return prisma.dailyLog.findMany({
+    const logs = await prisma.dailyLog.findMany({
       where: {
         userId,
         date: { gte: thirtyDaysAgo, lte: today }
       },
-      include: {
-        foodLogs: { include: { food: true } },
-        workoutLogs: { include: { exercise: true } }
-      },
       orderBy: { date: 'asc' }
+    });
+
+    const logMap = new Map<string, any>();
+    for (const log of logs) {
+      // Normalize date to YYYY-MM-DD
+      const dateKey = new Date(log.date).toISOString().split('T')[0];
+      logMap.set(dateKey, log);
+    }
+
+    // Find the earliest logged weight in our 30-day logs or fall back to currentWeight
+    let lastKnownWeight = currentWeight;
+    for (const log of logs) {
+      if (log.weight !== null && log.weight !== undefined && log.weight > 0) {
+        lastKnownWeight = log.weight;
+        break;
+      }
+    }
+
+    const analyticsData = [];
+    // Loop chronologically from 29 days ago to today (chronologically ascending)
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const dateKey = d.toISOString().split('T')[0];
+
+      const log = logMap.get(dateKey);
+      const daily_calories = log ? log.caloriesConsumed : 0;
+
+      let daily_weight = lastKnownWeight;
+      if (log && log.weight !== null && log.weight !== undefined && log.weight > 0) {
+        daily_weight = log.weight;
+        lastKnownWeight = log.weight;
+      } else {
+        // Carry forward the lastKnownWeight for intermediate days
+        daily_weight = lastKnownWeight;
+
+        // If this is today, ensure it uses currentWeight and saves to today's log if null
+        if (dateKey === today.toISOString().split('T')[0]) {
+          daily_weight = currentWeight;
+          lastKnownWeight = currentWeight;
+
+          if (log && !log.weight) {
+            try {
+              await prisma.dailyLog.update({
+                where: { id: log.id },
+                data: { weight: currentWeight }
+              });
+            } catch (e) {
+              console.error("Failed to update weight in dailyLog:", e);
+            }
+          }
+        }
+      }
+
+      analyticsData.push({
+        date: dateKey,
+        daily_calories,
+        daily_weight,
+        targetCalories
+      });
+    }
+
+    return analyticsData;
+  }
+
+  async logCustom(
+    userId: string,
+    data: { name: string; calories: number; protein: number; carbs: number; fat: number }
+  ) {
+    const { name, calories, protein, carbs, fat } = data;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    let food = await prisma.masterFood.findFirst({
+      where: { name: { equals: name, mode: 'insensitive' } }
+    });
+
+    if (!food) {
+      food = await prisma.masterFood.create({
+        data: {
+          name,
+          baseServingSize: 100,
+          baseCalories: calories,
+          baseProtein: protein,
+          baseCarbs: carbs,
+          baseFat: fat
+        }
+      });
+    }
+
+    return prisma.$transaction(async (tx) => {
+      let dailyLog = await tx.dailyLog.findUnique({
+        where: { userId_date: { userId, date: today } }
+      });
+
+      if (!dailyLog) {
+        dailyLog = await tx.dailyLog.create({
+          data: { userId, date: today }
+        });
+      }
+
+      await tx.foodLog.create({
+        data: {
+          dailyLogId: dailyLog.id,
+          foodId: food.id,
+          grams: 100,
+          calories,
+          protein,
+          carbs,
+          fat
+        }
+      });
+
+      return tx.dailyLog.update({
+        where: { id: dailyLog.id },
+        data: {
+          caloriesConsumed: { increment: calories },
+          proteinConsumed: { increment: protein },
+          carbsConsumed: { increment: carbs },
+          fatConsumed: { increment: fat }
+        }
+      });
     });
   }
 }
+

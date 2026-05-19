@@ -18,6 +18,10 @@ model UserProfile {
   activityLevel String  // "Sedentary", "Light", "Moderate", "Very", "Extra"
   workoutStyle String   // e.g. "Bodybuilding", "Cardio", "Calisthenics"
   goal         String   // "Fat Loss", "Muscle Gain", "Maintenance"
+<<<<<<< Updated upstream
+=======
+  diet         String   @default("Balanced")
+>>>>>>> Stashed changes
   
   targetCalories Int?
   targetProtein  Int?
@@ -27,3 +31,37 @@ model UserProfile {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
+<<<<<<< Updated upstream
+=======
+
+model DailyMealPlan {
+  id             String   @id @default(uuid())
+  userId         String
+  date           DateTime @db.Date
+  plan           Json
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([userId, date])
+}
+
+model SystemPrompt {
+  id           String   @id @default(uuid())
+  workoutStyle String   @unique // Gym, Yoga, Home Cardio, Diet Only
+  prompt       String   @db.Text
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model AiActivityLog {
+  id           String   @id @default(uuid())
+  userId       String
+  promptTokens Int
+  completionTokens Int
+  totalTokens  Int
+  cost         Float
+  intent       String
+  createdAt    DateTime @default(now())
+}
+
+>>>>>>> Stashed changes

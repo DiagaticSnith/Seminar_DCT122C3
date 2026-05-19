@@ -13,12 +13,20 @@
     "cors": "^2.8.5",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+<<<<<<< Updated upstream
+=======
+    "jsonwebtoken": "^9.0.3",
+>>>>>>> Stashed changes
     "pg": "^8.21.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
+<<<<<<< Updated upstream
+=======
+    "@types/jsonwebtoken": "^9.0.10",
+>>>>>>> Stashed changes
     "@types/node": "^25.9.0",
     "@types/pg": "^8.20.0",
     "@types/supertest": "^7.2.0",

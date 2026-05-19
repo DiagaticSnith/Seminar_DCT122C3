@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/chat_provider.dart';
+import '../providers/profile_provider.dart';
+import '../providers/tracking_provider.dart';
 import 'home/home_screen.dart';
 import 'diet/diet_screen.dart';
 import 'chat/chat_screen.dart';
@@ -21,6 +25,14 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
     const ChatScreen(),
     const ProfileScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ChatProvider>().connectWithToken();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

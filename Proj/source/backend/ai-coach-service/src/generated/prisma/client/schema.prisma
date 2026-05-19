@@ -1,0 +1,57 @@
+generator client {
+  provider     = "prisma-client-js"
+  output       = "../src/generated/prisma/client"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model UserProfile {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  height         Float
+  weight         Float
+  age            Int
+  gender         String
+  activityLevel  String
+  workoutStyle   String
+  goal           String
+  targetCalories Int?
+  targetProtein  Int?
+  targetCarbs    Int?
+  targetFat      Int?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model DailyMealPlan {
+  id        String   @id @default(uuid())
+  userId    String
+  date      DateTime @db.Date
+  plan      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, date])
+}
+
+model SystemPrompt {
+  id           String   @id @default(uuid())
+  workoutStyle String   @unique // Gym, Yoga, Home Cardio, Diet Only
+  prompt       String   @db.Text
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model AiActivityLog {
+  id               String   @id @default(uuid())
+  userId           String
+  promptTokens     Int
+  completionTokens Int
+  totalTokens      Int
+  cost             Float
+  intent           String
+  createdAt        DateTime @default(now())
+}

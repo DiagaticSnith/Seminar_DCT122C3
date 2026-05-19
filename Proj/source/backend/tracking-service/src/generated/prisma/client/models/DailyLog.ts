@@ -31,6 +31,7 @@ export type DailyLogAvgAggregateOutputType = {
   proteinConsumed: number | null
   carbsConsumed: number | null
   fatConsumed: number | null
+  weight: number | null
 }
 
 export type DailyLogSumAggregateOutputType = {
@@ -38,6 +39,7 @@ export type DailyLogSumAggregateOutputType = {
   proteinConsumed: number | null
   carbsConsumed: number | null
   fatConsumed: number | null
+  weight: number | null
 }
 
 export type DailyLogMinAggregateOutputType = {
@@ -48,6 +50,7 @@ export type DailyLogMinAggregateOutputType = {
   proteinConsumed: number | null
   carbsConsumed: number | null
   fatConsumed: number | null
+  weight: number | null
 }
 
 export type DailyLogMaxAggregateOutputType = {
@@ -58,6 +61,7 @@ export type DailyLogMaxAggregateOutputType = {
   proteinConsumed: number | null
   carbsConsumed: number | null
   fatConsumed: number | null
+  weight: number | null
 }
 
 export type DailyLogCountAggregateOutputType = {
@@ -68,6 +72,7 @@ export type DailyLogCountAggregateOutputType = {
   proteinConsumed: number
   carbsConsumed: number
   fatConsumed: number
+  weight: number
   _all: number
 }
 
@@ -77,6 +82,7 @@ export type DailyLogAvgAggregateInputType = {
   proteinConsumed?: true
   carbsConsumed?: true
   fatConsumed?: true
+  weight?: true
 }
 
 export type DailyLogSumAggregateInputType = {
@@ -84,6 +90,7 @@ export type DailyLogSumAggregateInputType = {
   proteinConsumed?: true
   carbsConsumed?: true
   fatConsumed?: true
+  weight?: true
 }
 
 export type DailyLogMinAggregateInputType = {
@@ -94,6 +101,7 @@ export type DailyLogMinAggregateInputType = {
   proteinConsumed?: true
   carbsConsumed?: true
   fatConsumed?: true
+  weight?: true
 }
 
 export type DailyLogMaxAggregateInputType = {
@@ -104,6 +112,7 @@ export type DailyLogMaxAggregateInputType = {
   proteinConsumed?: true
   carbsConsumed?: true
   fatConsumed?: true
+  weight?: true
 }
 
 export type DailyLogCountAggregateInputType = {
@@ -114,6 +123,7 @@ export type DailyLogCountAggregateInputType = {
   proteinConsumed?: true
   carbsConsumed?: true
   fatConsumed?: true
+  weight?: true
   _all?: true
 }
 
@@ -211,6 +221,7 @@ export type DailyLogGroupByOutputType = {
   proteinConsumed: number
   carbsConsumed: number
   fatConsumed: number
+  weight: number | null
   _count: DailyLogCountAggregateOutputType | null
   _avg: DailyLogAvgAggregateOutputType | null
   _sum: DailyLogSumAggregateOutputType | null
@@ -244,6 +255,7 @@ export type DailyLogWhereInput = {
   proteinConsumed?: Prisma.FloatFilter<"DailyLog"> | number
   carbsConsumed?: Prisma.FloatFilter<"DailyLog"> | number
   fatConsumed?: Prisma.FloatFilter<"DailyLog"> | number
+  weight?: Prisma.FloatNullableFilter<"DailyLog"> | number | null
   foodLogs?: Prisma.FoodLogListRelationFilter
   workoutLogs?: Prisma.WorkoutLogListRelationFilter
 }
@@ -256,6 +268,7 @@ export type DailyLogOrderByWithRelationInput = {
   proteinConsumed?: Prisma.SortOrder
   carbsConsumed?: Prisma.SortOrder
   fatConsumed?: Prisma.SortOrder
+  weight?: Prisma.SortOrderInput | Prisma.SortOrder
   foodLogs?: Prisma.FoodLogOrderByRelationAggregateInput
   workoutLogs?: Prisma.WorkoutLogOrderByRelationAggregateInput
 }
@@ -272,6 +285,7 @@ export type DailyLogWhereUniqueInput = Prisma.AtLeast<{
   proteinConsumed?: Prisma.FloatFilter<"DailyLog"> | number
   carbsConsumed?: Prisma.FloatFilter<"DailyLog"> | number
   fatConsumed?: Prisma.FloatFilter<"DailyLog"> | number
+  weight?: Prisma.FloatNullableFilter<"DailyLog"> | number | null
   foodLogs?: Prisma.FoodLogListRelationFilter
   workoutLogs?: Prisma.WorkoutLogListRelationFilter
 }, "id" | "userId_date">
@@ -284,6 +298,7 @@ export type DailyLogOrderByWithAggregationInput = {
   proteinConsumed?: Prisma.SortOrder
   carbsConsumed?: Prisma.SortOrder
   fatConsumed?: Prisma.SortOrder
+  weight?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.DailyLogCountOrderByAggregateInput
   _avg?: Prisma.DailyLogAvgOrderByAggregateInput
   _max?: Prisma.DailyLogMaxOrderByAggregateInput
@@ -302,6 +317,7 @@ export type DailyLogScalarWhereWithAggregatesInput = {
   proteinConsumed?: Prisma.FloatWithAggregatesFilter<"DailyLog"> | number
   carbsConsumed?: Prisma.FloatWithAggregatesFilter<"DailyLog"> | number
   fatConsumed?: Prisma.FloatWithAggregatesFilter<"DailyLog"> | number
+  weight?: Prisma.FloatNullableWithAggregatesFilter<"DailyLog"> | number | null
 }
 
 export type DailyLogCreateInput = {
@@ -312,6 +328,7 @@ export type DailyLogCreateInput = {
   proteinConsumed?: number
   carbsConsumed?: number
   fatConsumed?: number
+  weight?: number | null
   foodLogs?: Prisma.FoodLogCreateNestedManyWithoutDailyLogInput
   workoutLogs?: Prisma.WorkoutLogCreateNestedManyWithoutDailyLogInput
 }
@@ -324,6 +341,7 @@ export type DailyLogUncheckedCreateInput = {
   proteinConsumed?: number
   carbsConsumed?: number
   fatConsumed?: number
+  weight?: number | null
   foodLogs?: Prisma.FoodLogUncheckedCreateNestedManyWithoutDailyLogInput
   workoutLogs?: Prisma.WorkoutLogUncheckedCreateNestedManyWithoutDailyLogInput
 }
@@ -336,6 +354,7 @@ export type DailyLogUpdateInput = {
   proteinConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   carbsConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   fatConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
+  weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   foodLogs?: Prisma.FoodLogUpdateManyWithoutDailyLogNestedInput
   workoutLogs?: Prisma.WorkoutLogUpdateManyWithoutDailyLogNestedInput
 }
@@ -348,6 +367,7 @@ export type DailyLogUncheckedUpdateInput = {
   proteinConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   carbsConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   fatConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
+  weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   foodLogs?: Prisma.FoodLogUncheckedUpdateManyWithoutDailyLogNestedInput
   workoutLogs?: Prisma.WorkoutLogUncheckedUpdateManyWithoutDailyLogNestedInput
 }
@@ -360,6 +380,7 @@ export type DailyLogCreateManyInput = {
   proteinConsumed?: number
   carbsConsumed?: number
   fatConsumed?: number
+  weight?: number | null
 }
 
 export type DailyLogUpdateManyMutationInput = {
@@ -370,6 +391,7 @@ export type DailyLogUpdateManyMutationInput = {
   proteinConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   carbsConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   fatConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
+  weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type DailyLogUncheckedUpdateManyInput = {
@@ -380,6 +402,7 @@ export type DailyLogUncheckedUpdateManyInput = {
   proteinConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   carbsConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   fatConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
+  weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type DailyLogUserIdDateCompoundUniqueInput = {
@@ -395,6 +418,7 @@ export type DailyLogCountOrderByAggregateInput = {
   proteinConsumed?: Prisma.SortOrder
   carbsConsumed?: Prisma.SortOrder
   fatConsumed?: Prisma.SortOrder
+  weight?: Prisma.SortOrder
 }
 
 export type DailyLogAvgOrderByAggregateInput = {
@@ -402,6 +426,7 @@ export type DailyLogAvgOrderByAggregateInput = {
   proteinConsumed?: Prisma.SortOrder
   carbsConsumed?: Prisma.SortOrder
   fatConsumed?: Prisma.SortOrder
+  weight?: Prisma.SortOrder
 }
 
 export type DailyLogMaxOrderByAggregateInput = {
@@ -412,6 +437,7 @@ export type DailyLogMaxOrderByAggregateInput = {
   proteinConsumed?: Prisma.SortOrder
   carbsConsumed?: Prisma.SortOrder
   fatConsumed?: Prisma.SortOrder
+  weight?: Prisma.SortOrder
 }
 
 export type DailyLogMinOrderByAggregateInput = {
@@ -422,6 +448,7 @@ export type DailyLogMinOrderByAggregateInput = {
   proteinConsumed?: Prisma.SortOrder
   carbsConsumed?: Prisma.SortOrder
   fatConsumed?: Prisma.SortOrder
+  weight?: Prisma.SortOrder
 }
 
 export type DailyLogSumOrderByAggregateInput = {
@@ -429,6 +456,7 @@ export type DailyLogSumOrderByAggregateInput = {
   proteinConsumed?: Prisma.SortOrder
   carbsConsumed?: Prisma.SortOrder
   fatConsumed?: Prisma.SortOrder
+  weight?: Prisma.SortOrder
 }
 
 export type DailyLogScalarRelationFilter = {
@@ -438,6 +466,14 @@ export type DailyLogScalarRelationFilter = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type DailyLogCreateNestedOneWithoutFoodLogsInput = {
@@ -476,6 +512,7 @@ export type DailyLogCreateWithoutFoodLogsInput = {
   proteinConsumed?: number
   carbsConsumed?: number
   fatConsumed?: number
+  weight?: number | null
   workoutLogs?: Prisma.WorkoutLogCreateNestedManyWithoutDailyLogInput
 }
 
@@ -487,6 +524,7 @@ export type DailyLogUncheckedCreateWithoutFoodLogsInput = {
   proteinConsumed?: number
   carbsConsumed?: number
   fatConsumed?: number
+  weight?: number | null
   workoutLogs?: Prisma.WorkoutLogUncheckedCreateNestedManyWithoutDailyLogInput
 }
 
@@ -514,6 +552,7 @@ export type DailyLogUpdateWithoutFoodLogsInput = {
   proteinConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   carbsConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   fatConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
+  weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   workoutLogs?: Prisma.WorkoutLogUpdateManyWithoutDailyLogNestedInput
 }
 
@@ -525,6 +564,7 @@ export type DailyLogUncheckedUpdateWithoutFoodLogsInput = {
   proteinConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   carbsConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   fatConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
+  weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   workoutLogs?: Prisma.WorkoutLogUncheckedUpdateManyWithoutDailyLogNestedInput
 }
 
@@ -536,6 +576,7 @@ export type DailyLogCreateWithoutWorkoutLogsInput = {
   proteinConsumed?: number
   carbsConsumed?: number
   fatConsumed?: number
+  weight?: number | null
   foodLogs?: Prisma.FoodLogCreateNestedManyWithoutDailyLogInput
 }
 
@@ -547,6 +588,7 @@ export type DailyLogUncheckedCreateWithoutWorkoutLogsInput = {
   proteinConsumed?: number
   carbsConsumed?: number
   fatConsumed?: number
+  weight?: number | null
   foodLogs?: Prisma.FoodLogUncheckedCreateNestedManyWithoutDailyLogInput
 }
 
@@ -574,6 +616,7 @@ export type DailyLogUpdateWithoutWorkoutLogsInput = {
   proteinConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   carbsConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   fatConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
+  weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   foodLogs?: Prisma.FoodLogUpdateManyWithoutDailyLogNestedInput
 }
 
@@ -585,6 +628,7 @@ export type DailyLogUncheckedUpdateWithoutWorkoutLogsInput = {
   proteinConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   carbsConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
   fatConsumed?: Prisma.FloatFieldUpdateOperationsInput | number
+  weight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   foodLogs?: Prisma.FoodLogUncheckedUpdateManyWithoutDailyLogNestedInput
 }
 
@@ -636,6 +680,7 @@ export type DailyLogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   proteinConsumed?: boolean
   carbsConsumed?: boolean
   fatConsumed?: boolean
+  weight?: boolean
   foodLogs?: boolean | Prisma.DailyLog$foodLogsArgs<ExtArgs>
   workoutLogs?: boolean | Prisma.DailyLog$workoutLogsArgs<ExtArgs>
   _count?: boolean | Prisma.DailyLogCountOutputTypeDefaultArgs<ExtArgs>
@@ -649,6 +694,7 @@ export type DailyLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   proteinConsumed?: boolean
   carbsConsumed?: boolean
   fatConsumed?: boolean
+  weight?: boolean
 }, ExtArgs["result"]["dailyLog"]>
 
 export type DailyLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -659,6 +705,7 @@ export type DailyLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   proteinConsumed?: boolean
   carbsConsumed?: boolean
   fatConsumed?: boolean
+  weight?: boolean
 }, ExtArgs["result"]["dailyLog"]>
 
 export type DailyLogSelectScalar = {
@@ -669,9 +716,10 @@ export type DailyLogSelectScalar = {
   proteinConsumed?: boolean
   carbsConsumed?: boolean
   fatConsumed?: boolean
+  weight?: boolean
 }
 
-export type DailyLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "date" | "caloriesConsumed" | "proteinConsumed" | "carbsConsumed" | "fatConsumed", ExtArgs["result"]["dailyLog"]>
+export type DailyLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "date" | "caloriesConsumed" | "proteinConsumed" | "carbsConsumed" | "fatConsumed" | "weight", ExtArgs["result"]["dailyLog"]>
 export type DailyLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   foodLogs?: boolean | Prisma.DailyLog$foodLogsArgs<ExtArgs>
   workoutLogs?: boolean | Prisma.DailyLog$workoutLogsArgs<ExtArgs>
@@ -694,6 +742,7 @@ export type $DailyLogPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     proteinConsumed: number
     carbsConsumed: number
     fatConsumed: number
+    weight: number | null
   }, ExtArgs["result"]["dailyLog"]>
   composites: {}
 }
@@ -1126,6 +1175,7 @@ export interface DailyLogFieldRefs {
   readonly proteinConsumed: Prisma.FieldRef<"DailyLog", 'Float'>
   readonly carbsConsumed: Prisma.FieldRef<"DailyLog", 'Float'>
   readonly fatConsumed: Prisma.FieldRef<"DailyLog", 'Float'>
+  readonly weight: Prisma.FieldRef<"DailyLog", 'Float'>
 }
     
 

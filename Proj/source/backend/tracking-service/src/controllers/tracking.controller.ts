@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { TrackingService } from '../services/tracking.service';
+import { AuthRequest } from '../middleware/auth.middleware';
 
 const trackingService = new TrackingService();
 
@@ -18,34 +19,56 @@ export class TrackingController {
     } catch (e) { next(e); }
   }
 
-  async logFood(req: Request, res: Response, next: NextFunction) {
+  async logFood(req: AuthRequest, res: Response, next: NextFunction) {
     try {
-      const userId = req.body.userId || 'test-user-id';
-      const result = await trackingService.logFood(userId, req.body.foodId, req.body.grams);
+      const userId = req.user.userId;
+      const { foodId, grams, customFood } = req.body;
+      const result = await trackingService.logFood(userId, foodId, grams, customFood);
       res.json(result);
     } catch (e) { next(e); }
   }
 
-  async checkinWorkout(req: Request, res: Response, next: NextFunction) {
+  async checkinWorkout(req: AuthRequest, res: Response, next: NextFunction) {
     try {
-      const result = await trackingService.checkinWorkout(req.body.workoutLogId);
+      const userId = req.user.userId;
+      const { workoutLogId } = req.body;
+      const result = await trackingService.checkinWorkout(userId, workoutLogId);
       res.json(result);
     } catch (e) { next(e); }
   }
 
-  async getAnalytics(req: Request, res: Response, next: NextFunction) {
+  async getAnalytics(req: AuthRequest, res: Response, next: NextFunction) {
     try {
-      const userId = req.query.userId as string || 'test-user-id';
-      const result = await trackingService.getAnalytics(userId);
+      const userId = req.user.userId;
+      const token = req.headers.authorization;
+      const result = await trackingService.getAnalytics(userId, token);
       res.json(result);
     } catch (e) { next(e); }
   }
 
-  async getSchedule(req: Request, res: Response, next: NextFunction) {
+  async getSchedule(req: AuthRequest, res: Response, next: NextFunction) {
     try {
-      const userId = req.query.userId as string || 'test-user-id';
+      const userId = req.user.userId;
       const workoutStyle = req.query.workoutStyle as string || 'Bodybuilding';
       const result = await trackingService.getSchedule(userId, workoutStyle);
+      res.json(result);
+    } catch (e) { next(e); }
+  }
+
+  async swapWorkout(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user.userId;
+      const { swapFrom, swapTo } = req.body;
+      const result = await trackingService.swapExercise(userId, swapFrom, swapTo);
+      res.json(result);
+    } catch (e) { next(e); }
+  }
+
+  async logCustom(req: AuthRequest, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user.userId;
+      const { name, calories, protein, carbs, fat } = req.body;
+      const result = await trackingService.logCustom(userId, { name, calories, protein, carbs, fat });
       res.json(result);
     } catch (e) { next(e); }
   }

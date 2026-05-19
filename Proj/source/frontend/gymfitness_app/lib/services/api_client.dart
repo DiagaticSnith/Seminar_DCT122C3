@@ -5,11 +5,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiClient {
   static String get baseUrl {
+<<<<<<< Updated upstream
     if (kIsWeb) {
       return 'http://127.0.0.1:3000';
     }
     // Android emulator uses 10.0.2.2. iOS/Desktop uses 127.0.0.1.
     return 'http://10.0.2.2:3000'; 
+=======
+    if (kIsWeb) return 'http://127.0.0.1:3000';
+    return 'http://10.0.2.2:3000';
+>>>>>>> Stashed changes
   }
 
   static Future<http.Response> post(String endpoint, Map<String, dynamic> body) async {
