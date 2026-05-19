@@ -1,0 +1,26 @@
+generator client {
+  provider     = "prisma-client-js"
+  output       = "../src/generated/prisma/tracking"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model MasterFood {
+  id              String   @id @default(uuid())
+  name            String
+  baseServingSize Float
+  baseCalories    Float
+  baseProtein     Float
+  baseCarbs       Float
+  baseFat         Float
+}
+
+model MasterExercise {
+  id           String   @id @default(uuid())
+  name         String
+  category     String
+  tags         String[]
+  youtubeLink  String?
+}

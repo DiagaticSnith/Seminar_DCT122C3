@@ -22,3 +22,21 @@ export * from './enums';
  * 
  */
 export type UserProfile = Prisma.UserProfileModel
+<<<<<<< Updated upstream
+=======
+/**
+ * Model DailyMealPlan
+ * 
+ */
+export type DailyMealPlan = Prisma.DailyMealPlanModel
+/**
+ * Model SystemPrompt
+ * 
+ */
+export type SystemPrompt = Prisma.SystemPromptModel
+/**
+ * Model AiActivityLog
+ * 
+ */
+export type AiActivityLog = Prisma.AiActivityLogModel
+>>>>>>> Stashed changes

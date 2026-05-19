@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/api_client.dart';
+import 'chat_provider.dart';
+import 'tracking_provider.dart';
+import 'profile_provider.dart';
 
 class AuthProvider with ChangeNotifier {
   bool _isAuthenticated = false;
@@ -85,7 +88,17 @@ class AuthProvider with ChangeNotifier {
     return false;
   }
 
-  Future<void> logout() async {
+  Future<void> logout(
+    ChatProvider chatProvider,
+    TrackingProvider trackingProvider,
+    ProfileProvider profileProvider,
+  ) async {
+    // 1. Flush memory states to prevent state bleeding
+    chatProvider.clearData();
+    trackingProvider.clearState();
+    profileProvider.clearState();
+
+    // 2. Remove tokens
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('jwt_token');
     _token = null;

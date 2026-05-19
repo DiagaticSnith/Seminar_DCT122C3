@@ -1,5 +1,9 @@
+<<<<<<< Updated upstream
 import 'dotenv/config';
 import { PrismaClient } from '../generated/prisma/client/client';
+=======
+import { PrismaClient } from '../generated/prisma/client/index';
+>>>>>>> Stashed changes
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
 import bcrypt from 'bcrypt';
@@ -36,12 +40,16 @@ export class AuthService {
       throw new Error('Invalid credentials');
     }
 
+    if (user.suspended) {
+      throw new Error('Account suspended');
+    }
+
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
       throw new Error('Invalid credentials');
     }
 
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1d' });
-    return { token, user: { id: user.id, email: user.email } };
+    const token = jwt.sign({ userId: user.id, role: user.role }, JWT_SECRET, { expiresIn: '1d' });
+    return { token, user: { id: user.id, email: user.email, role: user.role } };
   }
 }

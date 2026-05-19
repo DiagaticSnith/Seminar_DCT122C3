@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/profile_provider.dart';
 import 'providers/tracking_provider.dart';
+import 'providers/chat_provider.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/main_layout.dart';
 import 'screens/onboarding/onboarding_screen.dart';
@@ -15,6 +16,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => ProfileProvider()),
         ChangeNotifierProvider(create: (_) => TrackingProvider()),
+        ChangeNotifierProvider(create: (_) => ChatProvider()),
       ],
       child: const GymFitnessApp(),
     ),

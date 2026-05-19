@@ -384,7 +384,14 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+<<<<<<< Updated upstream
   UserProfile: 'UserProfile'
+=======
+  UserProfile: 'UserProfile',
+  DailyMealPlan: 'DailyMealPlan',
+  SystemPrompt: 'SystemPrompt',
+  AiActivityLog: 'AiActivityLog'
+>>>>>>> Stashed changes
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -400,7 +407,11 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
+<<<<<<< Updated upstream
     modelProps: "userProfile"
+=======
+    modelProps: "userProfile" | "dailyMealPlan" | "systemPrompt" | "aiActivityLog"
+>>>>>>> Stashed changes
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -478,6 +489,231 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+<<<<<<< Updated upstream
+=======
+    DailyMealPlan: {
+      payload: Prisma.$DailyMealPlanPayload<ExtArgs>
+      fields: Prisma.DailyMealPlanFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DailyMealPlanFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyMealPlanPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DailyMealPlanFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyMealPlanPayload>
+        }
+        findFirst: {
+          args: Prisma.DailyMealPlanFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyMealPlanPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DailyMealPlanFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyMealPlanPayload>
+        }
+        findMany: {
+          args: Prisma.DailyMealPlanFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyMealPlanPayload>[]
+        }
+        create: {
+          args: Prisma.DailyMealPlanCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyMealPlanPayload>
+        }
+        createMany: {
+          args: Prisma.DailyMealPlanCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DailyMealPlanCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyMealPlanPayload>[]
+        }
+        delete: {
+          args: Prisma.DailyMealPlanDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyMealPlanPayload>
+        }
+        update: {
+          args: Prisma.DailyMealPlanUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyMealPlanPayload>
+        }
+        deleteMany: {
+          args: Prisma.DailyMealPlanDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DailyMealPlanUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DailyMealPlanUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyMealPlanPayload>[]
+        }
+        upsert: {
+          args: Prisma.DailyMealPlanUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyMealPlanPayload>
+        }
+        aggregate: {
+          args: Prisma.DailyMealPlanAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDailyMealPlan>
+        }
+        groupBy: {
+          args: Prisma.DailyMealPlanGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DailyMealPlanGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DailyMealPlanCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DailyMealPlanCountAggregateOutputType> | number
+        }
+      }
+    }
+    SystemPrompt: {
+      payload: Prisma.$SystemPromptPayload<ExtArgs>
+      fields: Prisma.SystemPromptFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SystemPromptFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemPromptPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SystemPromptFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemPromptPayload>
+        }
+        findFirst: {
+          args: Prisma.SystemPromptFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemPromptPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SystemPromptFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemPromptPayload>
+        }
+        findMany: {
+          args: Prisma.SystemPromptFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemPromptPayload>[]
+        }
+        create: {
+          args: Prisma.SystemPromptCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemPromptPayload>
+        }
+        createMany: {
+          args: Prisma.SystemPromptCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SystemPromptCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemPromptPayload>[]
+        }
+        delete: {
+          args: Prisma.SystemPromptDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemPromptPayload>
+        }
+        update: {
+          args: Prisma.SystemPromptUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemPromptPayload>
+        }
+        deleteMany: {
+          args: Prisma.SystemPromptDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SystemPromptUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SystemPromptUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemPromptPayload>[]
+        }
+        upsert: {
+          args: Prisma.SystemPromptUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemPromptPayload>
+        }
+        aggregate: {
+          args: Prisma.SystemPromptAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSystemPrompt>
+        }
+        groupBy: {
+          args: Prisma.SystemPromptGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SystemPromptGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SystemPromptCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SystemPromptCountAggregateOutputType> | number
+        }
+      }
+    }
+    AiActivityLog: {
+      payload: Prisma.$AiActivityLogPayload<ExtArgs>
+      fields: Prisma.AiActivityLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AiActivityLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiActivityLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AiActivityLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiActivityLogPayload>
+        }
+        findFirst: {
+          args: Prisma.AiActivityLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiActivityLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AiActivityLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiActivityLogPayload>
+        }
+        findMany: {
+          args: Prisma.AiActivityLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiActivityLogPayload>[]
+        }
+        create: {
+          args: Prisma.AiActivityLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiActivityLogPayload>
+        }
+        createMany: {
+          args: Prisma.AiActivityLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AiActivityLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiActivityLogPayload>[]
+        }
+        delete: {
+          args: Prisma.AiActivityLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiActivityLogPayload>
+        }
+        update: {
+          args: Prisma.AiActivityLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiActivityLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.AiActivityLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AiActivityLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AiActivityLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiActivityLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.AiActivityLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiActivityLogPayload>
+        }
+        aggregate: {
+          args: Prisma.AiActivityLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAiActivityLog>
+        }
+        groupBy: {
+          args: Prisma.AiActivityLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiActivityLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AiActivityLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiActivityLogCountAggregateOutputType> | number
+        }
+      }
+    }
+>>>>>>> Stashed changes
   }
 } & {
   other: {
@@ -527,6 +763,10 @@ export const UserProfileScalarFieldEnum = {
   activityLevel: 'activityLevel',
   workoutStyle: 'workoutStyle',
   goal: 'goal',
+<<<<<<< Updated upstream
+=======
+  diet: 'diet',
+>>>>>>> Stashed changes
   targetCalories: 'targetCalories',
   targetProtein: 'targetProtein',
   targetCarbs: 'targetCarbs',
@@ -538,6 +778,46 @@ export const UserProfileScalarFieldEnum = {
 export type UserProfileScalarFieldEnum = (typeof UserProfileScalarFieldEnum)[keyof typeof UserProfileScalarFieldEnum]
 
 
+<<<<<<< Updated upstream
+=======
+export const DailyMealPlanScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  date: 'date',
+  plan: 'plan',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DailyMealPlanScalarFieldEnum = (typeof DailyMealPlanScalarFieldEnum)[keyof typeof DailyMealPlanScalarFieldEnum]
+
+
+export const SystemPromptScalarFieldEnum = {
+  id: 'id',
+  workoutStyle: 'workoutStyle',
+  prompt: 'prompt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SystemPromptScalarFieldEnum = (typeof SystemPromptScalarFieldEnum)[keyof typeof SystemPromptScalarFieldEnum]
+
+
+export const AiActivityLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  promptTokens: 'promptTokens',
+  completionTokens: 'completionTokens',
+  totalTokens: 'totalTokens',
+  cost: 'cost',
+  intent: 'intent',
+  createdAt: 'createdAt'
+} as const
+
+export type AiActivityLogScalarFieldEnum = (typeof AiActivityLogScalarFieldEnum)[keyof typeof AiActivityLogScalarFieldEnum]
+
+
+>>>>>>> Stashed changes
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -546,6 +826,16 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+<<<<<<< Updated upstream
+=======
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+>>>>>>> Stashed changes
 export const QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -562,6 +852,18 @@ export const NullsOrder = {
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
+<<<<<<< Updated upstream
+=======
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+>>>>>>> Stashed changes
 
 /**
  * Field references
@@ -623,6 +925,23 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
 
+<<<<<<< Updated upstream
+=======
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+>>>>>>> Stashed changes
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -734,6 +1053,12 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   userProfile?: Prisma.UserProfileOmit
+<<<<<<< Updated upstream
+=======
+  dailyMealPlan?: Prisma.DailyMealPlanOmit
+  systemPrompt?: Prisma.SystemPromptOmit
+  aiActivityLog?: Prisma.AiActivityLogOmit
+>>>>>>> Stashed changes
 }
 
 /* Types for Logging */

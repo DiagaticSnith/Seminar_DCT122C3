@@ -4,6 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import '../../providers/profile_provider.dart';
 import '../../providers/tracking_provider.dart';
 import '../../utils/constants.dart';
+import 'analytics_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -13,23 +14,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool _isInit = false;
-
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_isInit) {
-      _initData();
-      _isInit = true;
-    }
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _initData());
   }
 
   Future<void> _initData() async {
+    if (!mounted) return;
     final profileProvider = context.read<ProfileProvider>();
     final trackingProvider = context.read<TrackingProvider>();
 
     await profileProvider.fetchProfile();
-    final style = profileProvider.profileData?['workoutStyle'] ?? 'Bodybuilding';
+    if (!mounted) return;
+    final style = profileProvider.profileData?['workoutStyle'] ?? 'None';
     await trackingProvider.fetchSchedule(style);
     await trackingProvider.fetchAnalytics();
   }
@@ -62,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final targetF = (profile['targetFat'] ?? 70).toDouble();
     final consumedF = (dailyLog['fatConsumed'] ?? 0).toDouble();
 
-    final workoutStyle = profile['workoutStyle'] ?? 'Bodybuilding';
+    final workoutStyle = profile['workoutStyle'] ?? 'None';
     final isDietOnly = workoutStyle == 'Diet Only';
 
     return Scaffold(
@@ -80,6 +78,15 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.analytics_outlined, color: AppColors.neonGreen),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AnalyticsScreen()),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.refresh, color: AppColors.neonGreen),
             onPressed: _initData,
@@ -112,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Goal: ${profile['goal'] ?? 'Muscle Gain'} • Style: $workoutStyle',
+                    'Goal: ${profile['goal'] ?? 'Not Set'} • Style: ${workoutStyle == 'None' ? 'Not Set' : workoutStyle}',
                     style: const TextStyle(color: AppColors.neonGreen, fontSize: 14, fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -134,84 +141,72 @@ class _HomeScreenState extends State<HomeScreen> {
                 Expanded(child: _buildMacroCard('Fat', consumedF, targetF, Colors.redAccent, 'g')),
               ],
             ),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                foregroundColor: AppColors.neonGreen,
+                side: const BorderSide(color: AppColors.neonGreen, width: 1.5),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AnalyticsScreen()),
+                );
+              },
+              icon: const Icon(Icons.show_chart, color: AppColors.neonGreen),
+              label: const Text(
+                'ANALYZE PROGRESS & TRENDS',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, letterSpacing: 1.2),
+              ),
+            ),
             const SizedBox(height: 32),
 
             // Adaptive Schedule Section
-            if (!isDietOnly) ...[
+            if (workoutStyle != 'Diet Only') ...[
               Text('TODAY’S ADAPTIVE SCHEDULE', style: _sectionTitleStyle()),
               const SizedBox(height: 16),
-              schedule.isEmpty
-                  ? const Text('No workouts scheduled for today.', style: TextStyle(color: AppColors.textGrey))
-                  : ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: schedule.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 12),
-                      itemBuilder: (context, index) {
-                        final item = schedule[index];
-                        if (item['type'] == 'Yoga') {
-                          return YogaCardWidget(item: item, workoutStyle: workoutStyle);
-                        } else {
-                          return GymCardWidget(item: item, workoutStyle: workoutStyle);
-                        }
-                      },
-                    ),
-              const SizedBox(height: 32),
-            ],
-
-            // 30-Day Trend Chart
-            Text('30-DAY CALORIE TREND', style: _sectionTitleStyle()),
-            const SizedBox(height: 16),
-            Container(
-              height: 220,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.inputBackground,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppColors.darkGreenBorder),
-              ),
-              child: analytics.isEmpty
-                  ? const Center(child: Text('Not enough data for chart', style: TextStyle(color: AppColors.textGrey)))
-                  : LineChart(
-                      LineChartData(
-                        gridData: FlGridData(show: false),
-                        titlesData: FlTitlesData(
-                          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                          bottomTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              getTitlesWidget: (val, _) {
-                                final intVal = val.toInt();
-                                if (intVal % 5 != 0 || intVal < 0 || intVal >= analytics.length) return const SizedBox();
-                                final dateStr = analytics[intVal]['date'].toString().substring(5, 10);
-                                return Text(dateStr, style: const TextStyle(color: AppColors.textGrey, fontSize: 10));
-                              },
-                            ),
-                          ),
-                        ),
-                        borderData: FlBorderData(show: false),
-                        lineBarsData: [
-                          LineChartBarData(
-                            spots: analytics.asMap().entries.map((e) {
-                              final cal = (e.value['caloriesConsumed'] ?? 0).toDouble();
-                              return FlSpot(e.key.toDouble(), cal);
-                            }).toList(),
-                            isCurved: true,
-                            color: AppColors.neonGreen,
-                            barWidth: 3,
-                            dotData: FlDotData(show: true),
-                            belowBarData: BarAreaData(
-                              show: true,
-                              color: AppColors.neonGreen.withOpacity(0.15),
-                            ),
+              profileProvider.profileData == null
+                  ? Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: AppColors.inputBackground,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: AppColors.darkGreenBorder),
+                      ),
+                      child: Column(
+                        children: [
+                          const Icon(Icons.fitness_center, color: AppColors.neonGreen, size: 40),
+                          const SizedBox(height: 12),
+                          const Text(
+                            'Please set up your profile metrics and workout style in the Profile tab to generate your daily personalized training plan! ⚡',
+                            style: TextStyle(color: AppColors.textGrey, height: 1.4, fontSize: 13),
+                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),
-                    ),
-            ),
-            const SizedBox(height: 40),
+                    )
+                  : schedule.isEmpty
+                      ? const Text('No workouts scheduled for today.', style: TextStyle(color: AppColors.textGrey))
+                      : ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: schedule.length,
+                          separatorBuilder: (_, __) => const SizedBox(height: 12),
+                          itemBuilder: (context, index) {
+                            final item = schedule[index];
+                            if (item['type'] == 'Yoga') {
+                              return YogaCardWidget(item: item, workoutStyle: workoutStyle);
+                            } else {
+                              return GymCardWidget(item: item, workoutStyle: workoutStyle);
+                            }
+                          },
+                        ),
+              const SizedBox(height: 32),
+            ],
+            const SizedBox(height: 16),
           ],
         ),
       ),

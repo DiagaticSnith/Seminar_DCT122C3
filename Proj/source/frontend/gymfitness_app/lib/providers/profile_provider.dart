@@ -16,16 +16,18 @@ class ProfileProvider with ChangeNotifier {
     return 'http://10.0.2.2:3001';
   }
 
-  Future<void> fetchProfile() async {
-    _isLoading = true;
+  void clearState() {
+    _profileData = null;
     notifyListeners();
+  }
 
+  Future<void> fetchProfile() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('jwt_token');
 
       final response = await http.get(
-        Uri.parse('$_userServiceUrl/users/me/metrics?userId=current-user-mock-id'),
+        Uri.parse('$_userServiceUrl/users/me/metrics'),
         headers: {
           'Content-Type': 'application/json',
           if (token != null) 'Authorization': 'Bearer $token',
@@ -34,13 +36,16 @@ class ProfileProvider with ChangeNotifier {
 
       if (response.statusCode == 200) {
         _profileData = jsonDecode(response.body);
+        notifyListeners();
+      } else {
+        _profileData = null;
+        notifyListeners();
       }
     } catch (e) {
+      _profileData = null;
+      notifyListeners();
       print('Fetch profile error: $e');
     }
-
-    _isLoading = false;
-    notifyListeners();
   }
 
   Future<bool> updateMetrics(Map<String, dynamic> data) async {
@@ -50,9 +55,6 @@ class ProfileProvider with ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('jwt_token');
-
-      // Adding a dummy user-id if not using full auth context yet
-      data['userId'] = 'current-user-mock-id';
 
       final response = await http.put(
         Uri.parse('$_userServiceUrl/users/me/metrics'),

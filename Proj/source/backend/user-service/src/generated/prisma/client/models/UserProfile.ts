@@ -56,6 +56,10 @@ export type UserProfileMinAggregateOutputType = {
   activityLevel: string | null
   workoutStyle: string | null
   goal: string | null
+<<<<<<< Updated upstream
+=======
+  diet: string | null
+>>>>>>> Stashed changes
   targetCalories: number | null
   targetProtein: number | null
   targetCarbs: number | null
@@ -74,6 +78,10 @@ export type UserProfileMaxAggregateOutputType = {
   activityLevel: string | null
   workoutStyle: string | null
   goal: string | null
+<<<<<<< Updated upstream
+=======
+  diet: string | null
+>>>>>>> Stashed changes
   targetCalories: number | null
   targetProtein: number | null
   targetCarbs: number | null
@@ -92,6 +100,10 @@ export type UserProfileCountAggregateOutputType = {
   activityLevel: number
   workoutStyle: number
   goal: number
+<<<<<<< Updated upstream
+=======
+  diet: number
+>>>>>>> Stashed changes
   targetCalories: number
   targetProtein: number
   targetCarbs: number
@@ -132,6 +144,10 @@ export type UserProfileMinAggregateInputType = {
   activityLevel?: true
   workoutStyle?: true
   goal?: true
+<<<<<<< Updated upstream
+=======
+  diet?: true
+>>>>>>> Stashed changes
   targetCalories?: true
   targetProtein?: true
   targetCarbs?: true
@@ -150,6 +166,10 @@ export type UserProfileMaxAggregateInputType = {
   activityLevel?: true
   workoutStyle?: true
   goal?: true
+<<<<<<< Updated upstream
+=======
+  diet?: true
+>>>>>>> Stashed changes
   targetCalories?: true
   targetProtein?: true
   targetCarbs?: true
@@ -168,6 +188,10 @@ export type UserProfileCountAggregateInputType = {
   activityLevel?: true
   workoutStyle?: true
   goal?: true
+<<<<<<< Updated upstream
+=======
+  diet?: true
+>>>>>>> Stashed changes
   targetCalories?: true
   targetProtein?: true
   targetCarbs?: true
@@ -273,6 +297,10 @@ export type UserProfileGroupByOutputType = {
   activityLevel: string
   workoutStyle: string
   goal: string
+<<<<<<< Updated upstream
+=======
+  diet: string
+>>>>>>> Stashed changes
   targetCalories: number | null
   targetProtein: number | null
   targetCarbs: number | null
@@ -314,6 +342,10 @@ export type UserProfileWhereInput = {
   activityLevel?: Prisma.StringFilter<"UserProfile"> | string
   workoutStyle?: Prisma.StringFilter<"UserProfile"> | string
   goal?: Prisma.StringFilter<"UserProfile"> | string
+<<<<<<< Updated upstream
+=======
+  diet?: Prisma.StringFilter<"UserProfile"> | string
+>>>>>>> Stashed changes
   targetCalories?: Prisma.IntNullableFilter<"UserProfile"> | number | null
   targetProtein?: Prisma.IntNullableFilter<"UserProfile"> | number | null
   targetCarbs?: Prisma.IntNullableFilter<"UserProfile"> | number | null
@@ -332,6 +364,10 @@ export type UserProfileOrderByWithRelationInput = {
   activityLevel?: Prisma.SortOrder
   workoutStyle?: Prisma.SortOrder
   goal?: Prisma.SortOrder
+<<<<<<< Updated upstream
+=======
+  diet?: Prisma.SortOrder
+>>>>>>> Stashed changes
   targetCalories?: Prisma.SortOrderInput | Prisma.SortOrder
   targetProtein?: Prisma.SortOrderInput | Prisma.SortOrder
   targetCarbs?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -353,6 +389,10 @@ export type UserProfileWhereUniqueInput = Prisma.AtLeast<{
   activityLevel?: Prisma.StringFilter<"UserProfile"> | string
   workoutStyle?: Prisma.StringFilter<"UserProfile"> | string
   goal?: Prisma.StringFilter<"UserProfile"> | string
+<<<<<<< Updated upstream
+=======
+  diet?: Prisma.StringFilter<"UserProfile"> | string
+>>>>>>> Stashed changes
   targetCalories?: Prisma.IntNullableFilter<"UserProfile"> | number | null
   targetProtein?: Prisma.IntNullableFilter<"UserProfile"> | number | null
   targetCarbs?: Prisma.IntNullableFilter<"UserProfile"> | number | null
@@ -371,6 +411,10 @@ export type UserProfileOrderByWithAggregationInput = {
   activityLevel?: Prisma.SortOrder
   workoutStyle?: Prisma.SortOrder
   goal?: Prisma.SortOrder
+<<<<<<< Updated upstream
+=======
+  diet?: Prisma.SortOrder
+>>>>>>> Stashed changes
   targetCalories?: Prisma.SortOrderInput | Prisma.SortOrder
   targetProtein?: Prisma.SortOrderInput | Prisma.SortOrder
   targetCarbs?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -397,6 +441,10 @@ export type UserProfileScalarWhereWithAggregatesInput = {
   activityLevel?: Prisma.StringWithAggregatesFilter<"UserProfile"> | string
   workoutStyle?: Prisma.StringWithAggregatesFilter<"UserProfile"> | string
   goal?: Prisma.StringWithAggregatesFilter<"UserProfile"> | string
+<<<<<<< Updated upstream
+=======
+  diet?: Prisma.StringWithAggregatesFilter<"UserProfile"> | string
+>>>>>>> Stashed changes
   targetCalories?: Prisma.IntNullableWithAggregatesFilter<"UserProfile"> | number | null
   targetProtein?: Prisma.IntNullableWithAggregatesFilter<"UserProfile"> | number | null
   targetCarbs?: Prisma.IntNullableWithAggregatesFilter<"UserProfile"> | number | null
@@ -415,6 +463,10 @@ export type UserProfileCreateInput = {
   activityLevel: string
   workoutStyle: string
   goal: string
+<<<<<<< Updated upstream
+=======
+  diet?: string
+>>>>>>> Stashed changes
   targetCalories?: number | null
   targetProtein?: number | null
   targetCarbs?: number | null
@@ -433,6 +485,10 @@ export type UserProfileUncheckedCreateInput = {
   activityLevel: string
   workoutStyle: string
   goal: string
+<<<<<<< Updated upstream
+=======
+  diet?: string
+>>>>>>> Stashed changes
   targetCalories?: number | null
   targetProtein?: number | null
   targetCarbs?: number | null
@@ -451,6 +507,10 @@ export type UserProfileUpdateInput = {
   activityLevel?: Prisma.StringFieldUpdateOperationsInput | string
   workoutStyle?: Prisma.StringFieldUpdateOperationsInput | string
   goal?: Prisma.StringFieldUpdateOperationsInput | string
+<<<<<<< Updated upstream
+=======
+  diet?: Prisma.StringFieldUpdateOperationsInput | string
+>>>>>>> Stashed changes
   targetCalories?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   targetProtein?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   targetCarbs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -469,6 +529,10 @@ export type UserProfileUncheckedUpdateInput = {
   activityLevel?: Prisma.StringFieldUpdateOperationsInput | string
   workoutStyle?: Prisma.StringFieldUpdateOperationsInput | string
   goal?: Prisma.StringFieldUpdateOperationsInput | string
+<<<<<<< Updated upstream
+=======
+  diet?: Prisma.StringFieldUpdateOperationsInput | string
+>>>>>>> Stashed changes
   targetCalories?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   targetProtein?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   targetCarbs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -487,6 +551,10 @@ export type UserProfileCreateManyInput = {
   activityLevel: string
   workoutStyle: string
   goal: string
+<<<<<<< Updated upstream
+=======
+  diet?: string
+>>>>>>> Stashed changes
   targetCalories?: number | null
   targetProtein?: number | null
   targetCarbs?: number | null
@@ -505,6 +573,10 @@ export type UserProfileUpdateManyMutationInput = {
   activityLevel?: Prisma.StringFieldUpdateOperationsInput | string
   workoutStyle?: Prisma.StringFieldUpdateOperationsInput | string
   goal?: Prisma.StringFieldUpdateOperationsInput | string
+<<<<<<< Updated upstream
+=======
+  diet?: Prisma.StringFieldUpdateOperationsInput | string
+>>>>>>> Stashed changes
   targetCalories?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   targetProtein?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   targetCarbs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -523,6 +595,10 @@ export type UserProfileUncheckedUpdateManyInput = {
   activityLevel?: Prisma.StringFieldUpdateOperationsInput | string
   workoutStyle?: Prisma.StringFieldUpdateOperationsInput | string
   goal?: Prisma.StringFieldUpdateOperationsInput | string
+<<<<<<< Updated upstream
+=======
+  diet?: Prisma.StringFieldUpdateOperationsInput | string
+>>>>>>> Stashed changes
   targetCalories?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   targetProtein?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   targetCarbs?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -541,6 +617,10 @@ export type UserProfileCountOrderByAggregateInput = {
   activityLevel?: Prisma.SortOrder
   workoutStyle?: Prisma.SortOrder
   goal?: Prisma.SortOrder
+<<<<<<< Updated upstream
+=======
+  diet?: Prisma.SortOrder
+>>>>>>> Stashed changes
   targetCalories?: Prisma.SortOrder
   targetProtein?: Prisma.SortOrder
   targetCarbs?: Prisma.SortOrder
@@ -569,6 +649,10 @@ export type UserProfileMaxOrderByAggregateInput = {
   activityLevel?: Prisma.SortOrder
   workoutStyle?: Prisma.SortOrder
   goal?: Prisma.SortOrder
+<<<<<<< Updated upstream
+=======
+  diet?: Prisma.SortOrder
+>>>>>>> Stashed changes
   targetCalories?: Prisma.SortOrder
   targetProtein?: Prisma.SortOrder
   targetCarbs?: Prisma.SortOrder
@@ -587,6 +671,10 @@ export type UserProfileMinOrderByAggregateInput = {
   activityLevel?: Prisma.SortOrder
   workoutStyle?: Prisma.SortOrder
   goal?: Prisma.SortOrder
+<<<<<<< Updated upstream
+=======
+  diet?: Prisma.SortOrder
+>>>>>>> Stashed changes
   targetCalories?: Prisma.SortOrder
   targetProtein?: Prisma.SortOrder
   targetCarbs?: Prisma.SortOrder
@@ -649,6 +737,10 @@ export type UserProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   activityLevel?: boolean
   workoutStyle?: boolean
   goal?: boolean
+<<<<<<< Updated upstream
+=======
+  diet?: boolean
+>>>>>>> Stashed changes
   targetCalories?: boolean
   targetProtein?: boolean
   targetCarbs?: boolean
@@ -667,6 +759,10 @@ export type UserProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   activityLevel?: boolean
   workoutStyle?: boolean
   goal?: boolean
+<<<<<<< Updated upstream
+=======
+  diet?: boolean
+>>>>>>> Stashed changes
   targetCalories?: boolean
   targetProtein?: boolean
   targetCarbs?: boolean
@@ -685,6 +781,10 @@ export type UserProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   activityLevel?: boolean
   workoutStyle?: boolean
   goal?: boolean
+<<<<<<< Updated upstream
+=======
+  diet?: boolean
+>>>>>>> Stashed changes
   targetCalories?: boolean
   targetProtein?: boolean
   targetCarbs?: boolean
@@ -703,6 +803,10 @@ export type UserProfileSelectScalar = {
   activityLevel?: boolean
   workoutStyle?: boolean
   goal?: boolean
+<<<<<<< Updated upstream
+=======
+  diet?: boolean
+>>>>>>> Stashed changes
   targetCalories?: boolean
   targetProtein?: boolean
   targetCarbs?: boolean
@@ -711,7 +815,11 @@ export type UserProfileSelectScalar = {
   updatedAt?: boolean
 }
 
+<<<<<<< Updated upstream
 export type UserProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "height" | "weight" | "age" | "gender" | "activityLevel" | "workoutStyle" | "goal" | "targetCalories" | "targetProtein" | "targetCarbs" | "targetFat" | "createdAt" | "updatedAt", ExtArgs["result"]["userProfile"]>
+=======
+export type UserProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "height" | "weight" | "age" | "gender" | "activityLevel" | "workoutStyle" | "goal" | "diet" | "targetCalories" | "targetProtein" | "targetCarbs" | "targetFat" | "createdAt" | "updatedAt", ExtArgs["result"]["userProfile"]>
+>>>>>>> Stashed changes
 
 export type $UserProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "UserProfile"
@@ -726,6 +834,10 @@ export type $UserProfilePayload<ExtArgs extends runtime.Types.Extensions.Interna
     activityLevel: string
     workoutStyle: string
     goal: string
+<<<<<<< Updated upstream
+=======
+    diet: string
+>>>>>>> Stashed changes
     targetCalories: number | null
     targetProtein: number | null
     targetCarbs: number | null
@@ -1164,6 +1276,10 @@ export interface UserProfileFieldRefs {
   readonly activityLevel: Prisma.FieldRef<"UserProfile", 'String'>
   readonly workoutStyle: Prisma.FieldRef<"UserProfile", 'String'>
   readonly goal: Prisma.FieldRef<"UserProfile", 'String'>
+<<<<<<< Updated upstream
+=======
+  readonly diet: Prisma.FieldRef<"UserProfile", 'String'>
+>>>>>>> Stashed changes
   readonly targetCalories: Prisma.FieldRef<"UserProfile", 'Int'>
   readonly targetProtein: Prisma.FieldRef<"UserProfile", 'Int'>
   readonly targetCarbs: Prisma.FieldRef<"UserProfile", 'Int'>

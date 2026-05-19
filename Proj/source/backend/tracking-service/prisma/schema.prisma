@@ -36,6 +36,7 @@ model DailyLog {
   proteinConsumed  Float    @default(0)
   carbsConsumed    Float    @default(0)
   fatConsumed      Float    @default(0)
+  weight           Float?
   
   foodLogs         FoodLog[]
   workoutLogs      WorkoutLog[]

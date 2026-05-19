@@ -26,6 +26,16 @@ jest.mock('../generated/prisma/client/client', () => {
           baseProtein: 20,
           baseCarbs: 30,
           baseFat: 5,
+        }),
+        findFirst: jest.fn<any>().mockResolvedValue(null),
+        create: jest.fn<any>().mockResolvedValue({
+          id: 'custom-food-1',
+          name: 'Custom Chicken',
+          baseServingSize: 100,
+          baseCalories: 150,
+          baseProtein: 25,
+          baseCarbs: 0,
+          baseFat: 3,
         })
       }
     }))
@@ -47,5 +57,20 @@ describe('Tracking Service - TC-TRACK-01', () => {
     expect(result.proteinConsumed.increment).toBe(30);   // 20 * 1.5
     expect(result.carbsConsumed.increment).toBe(45);     // 30 * 1.5
     expect(result.fatConsumed.increment).toBe(7.5);      // 5 * 1.5
+  });
+
+  it('should safely log custom food directly and increment daily calories/macros in a transaction', async () => {
+    const result: any = await trackingService.logCustom('user-1', {
+      name: 'Custom Chicken',
+      calories: 150,
+      protein: 25,
+      carbs: 0,
+      fat: 3
+    });
+
+    expect(result.caloriesConsumed.increment).toBe(150);
+    expect(result.proteinConsumed.increment).toBe(25);
+    expect(result.carbsConsumed.increment).toBe(0);
+    expect(result.fatConsumed.increment).toBe(3);
   });
 });
