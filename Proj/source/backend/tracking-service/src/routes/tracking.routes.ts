@@ -12,6 +12,8 @@ router.post('/log/food', authMiddleware, controller.logFood);
 router.post('/log/custom', authMiddleware, controller.logCustom);
 router.post('/log/workout/checkin', authMiddleware, controller.checkinWorkout);
 router.post('/workout/swap', authMiddleware, controller.swapWorkout);
+router.post('/workout/regenerate', authMiddleware, controller.regenerateSchedule);
+router.post('/workout/update', authMiddleware, controller.updateSchedule);
 
 router.get('/analytics', authMiddleware, controller.getAnalytics);
 router.get('/schedule', authMiddleware, controller.getSchedule);

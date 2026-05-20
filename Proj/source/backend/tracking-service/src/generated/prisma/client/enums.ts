@@ -9,7 +9,9 @@
 * 🟢 You can import this file directly.
 */
 
+export const FoodStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED'
+} as const
 
-
-// This file is empty because there are no enums in the schema.
-export {}
+export type FoodStatus = (typeof FoodStatus)[keyof typeof FoodStatus]

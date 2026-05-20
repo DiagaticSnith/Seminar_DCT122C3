@@ -17,7 +17,7 @@ RUN npx prisma generate --config user.config.ts && \
     npx prisma generate --config tracking.config.ts
 
 # Build TypeScript code
-RUN npx tsc && cp -r src/generated dist/generated
+RUN mkdir -p dist && cp -r src/generated dist/generated && npx tsc
 
 EXPOSE 3005
 

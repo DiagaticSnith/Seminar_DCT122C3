@@ -47,6 +47,26 @@ export class AdminController {
     }
   }
 
+  // Pending Food Queue
+  async getPendingFoods(req: AuthRequest, res: Response) {
+    try {
+      const foods = await adminService.getPendingFoods();
+      res.json({ success: true, data: foods });
+    } catch (error: any) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
+  async approvePendingFood(req: AuthRequest, res: Response) {
+    try {
+      const id = req.params.id as string;
+      const food = await adminService.approvePendingFood(id, req.body);
+      res.json({ success: true, message: 'Food approved successfully', data: food });
+    } catch (error: any) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
   // Master Food CRUD
   async getFoods(req: AuthRequest, res: Response) {
     try {

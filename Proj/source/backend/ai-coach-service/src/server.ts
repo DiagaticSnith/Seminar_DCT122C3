@@ -71,6 +71,39 @@ io.on('connection', (socket) => {
         (chunk) => socket.emit('chat_stream_chunk', { chunk })
       );
 
+      // Intercept updateSchedule intent and propagate to tracking service
+      if (result && (result as any).intent === 'updateSchedule') {
+        const routines = (result as any).routines;
+        if (Array.isArray(routines)) {
+          try {
+            const token = socket.handshake.auth?.token;
+            const trackingUrl = process.env.TRACKING_SERVICE_URL || 'http://gymfitness-tracking:3002';
+            console.log(`[AI-Coach] Propagating schedule update for user ${userId} to tracking service at ${trackingUrl}`);
+            
+            const response = await fetch(`${trackingUrl}/tracking/workout/update`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token ? `Bearer ${token}` : ''
+              },
+              body: JSON.stringify({
+                routines,
+                workoutStyle: context?.workoutStyle || 'Gym'
+              })
+            });
+
+            if (!response.ok) {
+              const errText = await response.text();
+              console.error(`[AI-Coach] Tracking service responded with error: ${errText}`);
+            } else {
+              console.log('[AI-Coach] Schedule successfully updated in database.');
+            }
+          } catch (fetchErr: any) {
+            console.error('[AI-Coach] Error calling tracking-service to update schedule:', fetchErr.message);
+          }
+        }
+      }
+
       // Append to history for context management (FR04)
       history.push({ role: 'user', content: message });
       history.push({ role: 'assistant', content: JSON.stringify(result) });

@@ -8,14 +8,20 @@ datasource db {
   provider = "postgresql"
 }
 
+enum FoodStatus {
+  PENDING
+  APPROVED
+}
+
 model MasterFood {
-  id              String   @id @default(uuid())
+  id              String     @id @default(uuid())
   name            String
-  baseServingSize Float    // e.g., 100g
+  baseServingSize Float      // e.g., 100g
   baseCalories    Float
   baseProtein     Float
   baseCarbs       Float
   baseFat         Float
+  status          FoodStatus @default(APPROVED)
   logs            FoodLog[]
 }
 
@@ -45,10 +51,11 @@ model DailyLog {
 }
 
 model FoodLog {
-  id          String     @id @default(uuid())
-  dailyLogId  String
-  foodId      String
-  grams       Float
+  id         String      @id @default(uuid())
+  dailyLogId String
+  foodId     String?
+  foodName   String?
+  grams      Float
   
   // Calculated proportional macros
   calories    Float
@@ -56,8 +63,8 @@ model FoodLog {
   carbs       Float
   fat         Float
 
-  dailyLog    DailyLog   @relation(fields: [dailyLogId], references: [id])
-  food        MasterFood @relation(fields: [foodId], references: [id])
+  dailyLog    DailyLog    @relation(fields: [dailyLogId], references: [id])
+  food        MasterFood? @relation(fields: [foodId], references: [id], onDelete: SetNull)
 }
 
 model WorkoutLog {

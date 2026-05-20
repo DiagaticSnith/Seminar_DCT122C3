@@ -173,6 +173,15 @@ class TrackingProvider with ChangeNotifier {
 
   Future<bool> checkinWorkout(String workoutLogId, String workoutStyle) async {
     try {
+      // Optimistic update of local state
+      for (var item in _schedule) {
+        if (item is Map && item['id'] == workoutLogId) {
+          item['completed'] = true;
+          break;
+        }
+      }
+      notifyListeners();
+
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('jwt_token');
 
@@ -192,6 +201,8 @@ class TrackingProvider with ChangeNotifier {
     } catch (e) {
       print('Checkin workout error: $e');
     }
+    // Revert state/Sync if API call fails
+    await fetchSchedule(workoutStyle);
     return false;
   }
 

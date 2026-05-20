@@ -143,7 +143,7 @@ class _DietScreenState extends State<DietScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(log['food']?['name'] ?? 'Food', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                          Text(log['foodName'] ?? log['food']?['name'] ?? 'Food', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                           const SizedBox(height: 4),
                           Text('${log['grams']}g', style: const TextStyle(color: AppColors.neonGreen, fontSize: 12, fontWeight: FontWeight.bold)),
                           const SizedBox(height: 4),

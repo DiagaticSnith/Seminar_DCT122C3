@@ -111,7 +111,7 @@ export class TrackingService {
 
   async getFood() {
     await this.seedIfEmpty();
-    return prisma.masterFood.findMany();
+    return prisma.masterFood.findMany({ where: { status: 'APPROVED' } });
   }
 
   async logFood(
@@ -137,10 +137,11 @@ export class TrackingService {
           data: {
             name: customFood.name,
             baseServingSize: 100,
-            baseCalories: customFood.calories,
-            baseProtein: customFood.protein,
-            baseCarbs: customFood.carbs,
-            baseFat: customFood.fat
+            baseCalories: (customFood.calories * 100) / (grams || 100),
+            baseProtein: (customFood.protein * 100) / (grams || 100),
+            baseCarbs: (customFood.carbs * 100) / (grams || 100),
+            baseFat: (customFood.fat * 100) / (grams || 100),
+            status: 'PENDING'
           }
         });
       }
@@ -170,6 +171,7 @@ export class TrackingService {
         data: {
           dailyLogId: dailyLog.id,
           foodId: food.id,
+          foodName: food.name,
           grams,
           calories,
           protein,
@@ -213,7 +215,10 @@ export class TrackingService {
     let dailyLog = await prisma.dailyLog.findUnique({
       where: { userId_date: { userId, date: today } },
       include: {
-        workoutLogs: { include: { exercise: true } },
+        workoutLogs: { 
+          include: { exercise: true },
+          orderBy: { id: 'asc' }
+        },
         foodLogs: { include: { food: true } }
       }
     });
@@ -222,7 +227,10 @@ export class TrackingService {
       dailyLog = await prisma.dailyLog.create({
         data: { userId, date: today },
         include: {
-          workoutLogs: { include: { exercise: true } },
+          workoutLogs: { 
+            include: { exercise: true },
+            orderBy: { id: 'asc' }
+          },
           foodLogs: { include: { food: true } }
         }
       });
@@ -232,7 +240,8 @@ export class TrackingService {
       // Find exercises matching workoutStyle
       const styleTag = workoutStyle === 'Yoga' ? 'Yoga' : workoutStyle === 'Cardio' ? 'Cardio' : 'Bodybuilding';
       const exercises = await prisma.masterExercise.findMany({
-        where: { tags: { has: styleTag } }
+        where: { tags: { has: styleTag } },
+        take: 6
       });
 
       for (const ex of exercises) {
@@ -250,7 +259,10 @@ export class TrackingService {
       dailyLog = await prisma.dailyLog.findUnique({
         where: { id: dailyLog!.id },
         include: {
-          workoutLogs: { include: { exercise: true } },
+          workoutLogs: { 
+            include: { exercise: true },
+            orderBy: { id: 'asc' }
+          },
           foodLogs: { include: { food: true } }
         }
       }) as any;
@@ -281,6 +293,67 @@ export class TrackingService {
     };
   }
 
+  async regenerateSchedule(userId: string, workoutStyle: string) {
+    await this.seedIfEmpty();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    let dailyLog = await prisma.dailyLog.findUnique({
+      where: { userId_date: { userId, date: today } },
+      include: {
+        workoutLogs: { 
+          include: { exercise: true },
+          orderBy: { id: 'asc' }
+        }
+      }
+    });
+
+    if (!dailyLog) {
+      dailyLog = await prisma.dailyLog.create({
+        data: { userId, date: today },
+        include: {
+          workoutLogs: { 
+            include: { exercise: true },
+            orderBy: { id: 'asc' }
+          }
+        }
+      });
+    }
+
+    // Execute multiple database writes inside prisma.$transaction
+    await prisma.$transaction(async (tx) => {
+      // 1. Delete all uncompleted/pending workout logs for today
+      await tx.workoutLog.deleteMany({
+        where: {
+          dailyLogId: dailyLog!.id,
+          completed: false
+        }
+      });
+
+      // 2. Generate new exercises suited for the new workout style
+      if (workoutStyle !== 'None' && workoutStyle !== 'Diet Only') {
+        const styleTag = workoutStyle === 'Yoga' ? 'Yoga' : workoutStyle === 'Cardio' ? 'Cardio' : 'Bodybuilding';
+        const exercises = await tx.masterExercise.findMany({
+          where: { tags: { has: styleTag } },
+          take: 6
+        });
+
+        for (const ex of exercises) {
+          await tx.workoutLog.create({
+            data: {
+              dailyLogId: dailyLog!.id,
+              exerciseId: ex.id,
+              sets: styleTag === 'Yoga' ? 1 : 4,
+              reps: styleTag === 'Yoga' ? 1 : 12,
+            }
+          });
+        }
+      }
+    });
+
+    return this.getSchedule(userId, workoutStyle);
+  }
+
   async swapExercise(userId: string, swapFrom: string, swapTo: string) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -295,7 +368,8 @@ export class TrackingService {
 
     const workoutLogs = await prisma.workoutLog.findMany({
       where: { dailyLogId: dailyLog.id },
-      include: { exercise: true }
+      include: { exercise: true },
+      orderBy: { id: 'asc' }
     });
 
     // 1. Exact Name Match
@@ -391,7 +465,8 @@ export class TrackingService {
 
     if (token) {
       try {
-        const response = await fetch('http://localhost:3001/api/user/me/metrics', {
+        const userUrl = process.env.USER_SERVICE_URL || 'http://gymfitness-user:3001/users/me/metrics';
+        const response = await fetch(userUrl, {
           headers: {
             'Authorization': token
           }
@@ -499,10 +574,11 @@ export class TrackingService {
         data: {
           name,
           baseServingSize: 100,
-          baseCalories: calories,
-          baseProtein: protein,
-          baseCarbs: carbs,
-          baseFat: fat
+          baseCalories: (calories * 100) / grams,
+          baseProtein: (protein * 100) / grams,
+          baseCarbs: (carbs * 100) / grams,
+          baseFat: (fat * 100) / grams,
+          status: 'PENDING'
         }
       });
     }
@@ -522,6 +598,7 @@ export class TrackingService {
         data: {
           dailyLogId: dailyLog.id,
           foodId: food.id,
+          foodName: food.name,
           grams,
           calories,
           protein,
@@ -540,6 +617,86 @@ export class TrackingService {
         }
       });
     });
+  }
+
+  async updateSchedule(
+    userId: string,
+    routines: Array<{ exerciseName: string; sets: number; reps: number }>,
+    workoutStyle: string = 'Gym'
+  ) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    let dailyLog = await prisma.dailyLog.findUnique({
+      where: { userId_date: { userId, date: today } }
+    });
+
+    if (!dailyLog) {
+      dailyLog = await prisma.dailyLog.create({
+        data: { userId, date: today }
+      });
+    }
+
+    await prisma.$transaction(async (tx) => {
+      // 1. Delete all of today's existing workoutLog rows for this user
+      await tx.workoutLog.deleteMany({
+        where: { dailyLogId: dailyLog!.id }
+      });
+
+      // 2. Insert new routines
+      for (const item of routines) {
+        let masterExercise = await tx.masterExercise.findFirst({
+          where: { name: { equals: item.exerciseName, mode: 'insensitive' } }
+        });
+
+        if (!masterExercise) {
+          masterExercise = await tx.masterExercise.findFirst({
+            where: { name: { contains: item.exerciseName, mode: 'insensitive' } }
+          });
+        }
+
+        if (!masterExercise) {
+          let category = 'Gym';
+          const nameLower = item.exerciseName.toLowerCase();
+          if (nameLower.includes('leg') || nameLower.includes('squat') || nameLower.includes('lung') || nameLower.includes('calf') || nameLower.includes('quad') || nameLower.includes('hamstring')) {
+            category = 'Legs';
+          } else if (nameLower.includes('chest') || nameLower.includes('bench') || nameLower.includes('pushup') || nameLower.includes('fly') || nameLower.includes('pec')) {
+            category = 'Chest';
+          } else if (nameLower.includes('shoulder') || nameLower.includes('overhead') || nameLower.includes('press') || nameLower.includes('lateral') || nameLower.includes('deltoid')) {
+            category = 'Shoulders';
+          } else if (nameLower.includes('back') || nameLower.includes('row') || nameLower.includes('pull') || nameLower.includes('deadlift') || nameLower.includes('lats')) {
+            category = 'Back';
+          } else if (nameLower.includes('cardio') || nameLower.includes('sprint') || nameLower.includes('run') || nameLower.includes('jump') || nameLower.includes('rope') || nameLower.includes('treadmill')) {
+            category = 'Cardio';
+          } else if (nameLower.includes('yoga') || nameLower.includes('pose') || nameLower.includes('stretch') || nameLower.includes('flex')) {
+            category = 'Yoga';
+          } else if (nameLower.includes('bicep') || nameLower.includes('tricep') || nameLower.includes('arm') || nameLower.includes('curl')) {
+            category = 'Arms';
+          }
+
+          masterExercise = await tx.masterExercise.create({
+            data: {
+              name: item.exerciseName,
+              category,
+              tags: category === 'Cardio' ? ['Cardio', 'Home'] : category === 'Yoga' ? ['Yoga', 'Home'] : ['Gym', 'Bodybuilding'],
+              youtubeLink: null
+            }
+          });
+        }
+
+        await tx.workoutLog.create({
+          data: {
+            dailyLogId: dailyLog!.id,
+            exerciseId: masterExercise.id,
+            sets: item.sets ?? 4,
+            reps: item.reps ?? 12,
+            completed: false
+          }
+        });
+      }
+    });
+
+    return this.getSchedule(userId, workoutStyle);
   }
 }
 

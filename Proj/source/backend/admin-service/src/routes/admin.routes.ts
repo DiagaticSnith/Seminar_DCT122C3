@@ -20,6 +20,10 @@ router.post('/master/food', controller.createFood.bind(controller) as any);
 router.put('/master/food/:id', controller.updateFood.bind(controller) as any);
 router.delete('/master/food/:id', controller.deleteFood.bind(controller) as any);
 
+// Pending Food Queue
+router.get('/foods/pending', controller.getPendingFoods.bind(controller) as any);
+router.put('/foods/pending/:id', controller.approvePendingFood.bind(controller) as any);
+
 // Master Exercise CRUD
 router.get('/master/exercises', controller.getExercises.bind(controller) as any);
 router.post('/master/exercises', controller.createExercise.bind(controller) as any);

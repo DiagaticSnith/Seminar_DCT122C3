@@ -40,6 +40,13 @@ export type FloatFilter<$PrismaModel = never> = {
   not?: Prisma.NestedFloatFilter<$PrismaModel> | number
 }
 
+export type EnumFoodStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.FoodStatus | Prisma.EnumFoodStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.FoodStatus[] | Prisma.ListEnumFoodStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.FoodStatus[] | Prisma.ListEnumFoodStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumFoodStatusFilter<$PrismaModel> | $Enums.FoodStatus
+}
+
 export type StringWithAggregatesFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -72,6 +79,16 @@ export type FloatWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedFloatFilter<$PrismaModel>
   _min?: Prisma.NestedFloatFilter<$PrismaModel>
   _max?: Prisma.NestedFloatFilter<$PrismaModel>
+}
+
+export type EnumFoodStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.FoodStatus | Prisma.EnumFoodStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.FoodStatus[] | Prisma.ListEnumFoodStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.FoodStatus[] | Prisma.ListEnumFoodStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumFoodStatusWithAggregatesFilter<$PrismaModel> | $Enums.FoodStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumFoodStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumFoodStatusFilter<$PrismaModel>
 }
 
 export type StringNullableFilter<$PrismaModel = never> = {
@@ -229,6 +246,13 @@ export type NestedFloatFilter<$PrismaModel = never> = {
   not?: Prisma.NestedFloatFilter<$PrismaModel> | number
 }
 
+export type NestedEnumFoodStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.FoodStatus | Prisma.EnumFoodStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.FoodStatus[] | Prisma.ListEnumFoodStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.FoodStatus[] | Prisma.ListEnumFoodStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumFoodStatusFilter<$PrismaModel> | $Enums.FoodStatus
+}
+
 export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -271,6 +295,16 @@ export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedFloatFilter<$PrismaModel>
   _min?: Prisma.NestedFloatFilter<$PrismaModel>
   _max?: Prisma.NestedFloatFilter<$PrismaModel>
+}
+
+export type NestedEnumFoodStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.FoodStatus | Prisma.EnumFoodStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.FoodStatus[] | Prisma.ListEnumFoodStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.FoodStatus[] | Prisma.ListEnumFoodStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumFoodStatusWithAggregatesFilter<$PrismaModel> | $Enums.FoodStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumFoodStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumFoodStatusFilter<$PrismaModel>
 }
 
 export type NestedStringNullableFilter<$PrismaModel = never> = {

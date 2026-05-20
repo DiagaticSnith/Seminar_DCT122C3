@@ -295,16 +295,20 @@ class GymCardWidget extends StatelessWidget {
                 Text(
                   ex['name'] ?? 'Exercise',
                   style: TextStyle(
-                    color: completed ? AppColors.textGrey : Colors.white,
+                    color: completed ? AppColors.textGrey.withOpacity(0.5) : Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     decoration: completed ? TextDecoration.lineThrough : null,
+                    decorationColor: completed ? AppColors.textGrey.withOpacity(0.5) : null,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '${item['sets']} Sets • ${item['reps']} Reps | Category: ${ex['category'] ?? ''}',
-                  style: const TextStyle(color: AppColors.textGrey, fontSize: 12),
+                  style: TextStyle(
+                    color: completed ? AppColors.textGrey.withOpacity(0.4) : AppColors.textGrey,
+                    fontSize: 12,
+                  ),
                 ),
               ],
             ),
@@ -419,16 +423,20 @@ class _YogaCardWidgetState extends State<YogaCardWidget> {
                     Text(
                       ex['name'] ?? 'Yoga Pose',
                       style: TextStyle(
-                        color: completed ? AppColors.textGrey : Colors.white,
+                        color: completed ? AppColors.textGrey.withOpacity(0.5) : Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         decoration: completed ? TextDecoration.lineThrough : null,
+                        decorationColor: completed ? AppColors.textGrey.withOpacity(0.5) : null,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       'Duration: ${widget.item['duration_seconds'] ?? 300}s | Category: ${ex['category'] ?? ''}',
-                      style: const TextStyle(color: AppColors.textGrey, fontSize: 12),
+                      style: TextStyle(
+                        color: completed ? AppColors.textGrey.withOpacity(0.4) : AppColors.textGrey,
+                        fontSize: 12,
+                      ),
                     ),
                   ],
                 ),

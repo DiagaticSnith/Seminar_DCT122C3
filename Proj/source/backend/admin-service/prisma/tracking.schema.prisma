@@ -7,20 +7,73 @@ datasource db {
   provider = "postgresql"
 }
 
+enum FoodStatus {
+  PENDING
+  APPROVED
+}
+
 model MasterFood {
-  id              String   @id @default(uuid())
+  id              String     @id @default(uuid())
   name            String
-  baseServingSize Float
+  baseServingSize Float      // e.g., 100g
   baseCalories    Float
   baseProtein     Float
   baseCarbs       Float
   baseFat         Float
+  status          FoodStatus @default(APPROVED)
+  logs            FoodLog[]
 }
 
 model MasterExercise {
   id           String   @id @default(uuid())
   name         String
-  category     String
-  tags         String[]
+  category     String   // "Chest", "Back", "Cardio"
+  tags         String[] // "Beginner", "Gym", "Home"
   youtubeLink  String?
+  logs         WorkoutLog[]
+}
+
+model DailyLog {
+  id               String   @id @default(uuid())
+  userId           String
+  date             DateTime @db.Date
+  caloriesConsumed Float    @default(0)
+  proteinConsumed  Float    @default(0)
+  carbsConsumed    Float    @default(0)
+  fatConsumed      Float    @default(0)
+  weight           Float?
+  
+  foodLogs         FoodLog[]
+  workoutLogs      WorkoutLog[]
+
+  @@unique([userId, date])
+}
+
+model FoodLog {
+  id         String      @id @default(uuid())
+  dailyLogId String
+  foodId     String?
+  foodName   String?
+  grams      Float
+  
+  // Calculated proportional macros
+  calories    Float
+  protein     Float
+  carbs       Float
+  fat         Float
+
+  dailyLog    DailyLog    @relation(fields: [dailyLogId], references: [id])
+  food        MasterFood? @relation(fields: [foodId], references: [id], onDelete: SetNull)
+}
+
+model WorkoutLog {
+  id          String         @id @default(uuid())
+  dailyLogId  String
+  exerciseId  String
+  sets        Int
+  reps        Int
+  completed   Boolean        @default(false)
+  
+  dailyLog    DailyLog       @relation(fields: [dailyLogId], references: [id])
+  exercise    MasterExercise @relation(fields: [exerciseId], references: [id])
 }

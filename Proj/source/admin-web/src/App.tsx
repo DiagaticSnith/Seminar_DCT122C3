@@ -103,8 +103,9 @@ export default function App() {
   const [workoutDistribution, setWorkoutDistribution] = useState<WorkoutDistItem[]>([]);
 
   // Master Data State
-  const [masterTab, setMasterTab] = useState<'food' | 'exercise'>('food');
+  const [masterTab, setMasterTab] = useState<'food' | 'pendingFood' | 'exercise'>('food');
   const [foods, setFoods] = useState<FoodItem[]>([]);
+  const [pendingFoods, setPendingFoods] = useState<FoodItem[]>([]);
   const [exercises, setExercises] = useState<ExerciseItem[]>([]);
 
   // Modals for CRUD
@@ -141,6 +142,7 @@ export default function App() {
 
   // Pagination State
   const [foodPage, setFoodPage] = useState(0);
+  const [pendingFoodPage, setPendingFoodPage] = useState(0);
   const [exercisePage, setExercisePage] = useState(0);
   const [userPage, setUserPage] = useState(0);
   const ITEMS_PER_PAGE = 8;
@@ -148,6 +150,7 @@ export default function App() {
   // Reset pagination on search query change or tab change
   useEffect(() => {
     setFoodPage(0);
+    setPendingFoodPage(0);
     setExercisePage(0);
     setUserPage(0);
   }, [searchQuery, activeTab, masterTab]);
@@ -188,6 +191,11 @@ export default function App() {
       const foodRes = await api.get('/master/food');
       if (foodRes.data?.success || Array.isArray(foodRes.data?.data)) {
         setFoods(foodRes.data.data || foodRes.data);
+      }
+
+      const pendingRes = await api.get('/foods/pending');
+      if (pendingRes.data?.success || Array.isArray(pendingRes.data?.data)) {
+        setPendingFoods(pendingRes.data.data || pendingRes.data);
       }
 
       const exerciseRes = await api.get('/master/exercises');
@@ -331,10 +339,19 @@ export default function App() {
     e.preventDefault();
     try {
       if (editingFood) {
-        const res = await api.put(`/master/food/${editingFood.id}`, foodForm);
-        if (res.data?.success) {
-          setFoods(foods.map(f => f.id === editingFood.id ? { ...f, ...foodForm } : f));
-          setFoodModalOpen(false);
+        if (masterTab === 'pendingFood') {
+          const res = await api.put(`/foods/pending/${editingFood.id}`, foodForm);
+          if (res.data?.success) {
+            setPendingFoods(pendingFoods.filter(f => f.id !== editingFood.id));
+            setFoods([...foods, { ...editingFood, ...foodForm }]);
+            setFoodModalOpen(false);
+          }
+        } else {
+          const res = await api.put(`/master/food/${editingFood.id}`, foodForm);
+          if (res.data?.success) {
+            setFoods(foods.map(f => f.id === editingFood.id ? { ...f, ...foodForm } : f));
+            setFoodModalOpen(false);
+          }
         }
       } else {
         const res = await api.post('/master/food', foodForm);
@@ -354,6 +371,7 @@ export default function App() {
       const res = await api.delete(`/master/food/${id}`);
       if (res.data?.success) {
         setFoods(foods.filter(f => f.id !== id));
+        setPendingFoods(pendingFoods.filter(f => f.id !== id));
       }
     } catch (err) {
       console.error('Failed to delete food item', err);
@@ -776,6 +794,14 @@ export default function App() {
                   Food Dictionary
                 </button>
                 <button
+                  onClick={() => setMasterTab('pendingFood')}
+                  className={`pb-3 font-semibold text-sm transition-all border-b-2 ${
+                    masterTab === 'pendingFood' ? 'border-neonGreen text-neonGreen' : 'border-transparent text-textGrey hover:text-white'
+                  }`}
+                >
+                  Pending Queue
+                </button>
+                <button
                   onClick={() => setMasterTab('exercise')}
                   className={`pb-3 font-semibold text-sm transition-all border-b-2 ${
                     masterTab === 'exercise' ? 'border-neonGreen text-neonGreen' : 'border-transparent text-textGrey hover:text-white'
@@ -847,6 +873,76 @@ export default function App() {
                           <button 
                             disabled={foodPage >= totalFoodPages - 1} 
                             onClick={() => setFoodPage(foodPage + 1)}
+                            className="px-3 py-1.5 rounded bg-[#111624] border border-[#1d273d] text-white hover:border-neonGreen/45 disabled:opacity-40 disabled:hover:border-[#1d273d] transition-all"
+                          >
+                            Next
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()
+              ) : masterTab === 'pendingFood' ? (
+                (() => {
+                  const filteredPending = pendingFoods.filter(f => f.name.toLowerCase().includes(searchQuery.toLowerCase()));
+                  const totalPendingPages = Math.ceil(filteredPending.length / ITEMS_PER_PAGE) || 1;
+                  const paginatedPending = filteredPending.slice(pendingFoodPage * ITEMS_PER_PAGE, (pendingFoodPage + 1) * ITEMS_PER_PAGE);
+
+                  return (
+                    <div className="bg-[#090d16] border border-[#0f1525] rounded-xl overflow-hidden">
+                      <div className="p-6 border-b border-[#0f1525] flex justify-between items-center">
+                        <h3 className="text-sm font-bold">Pending Food Queue</h3>
+                      </div>
+                      <table className="w-full text-left border-collapse text-xs">
+                        <thead>
+                          <tr className="border-b border-[#0f1525] text-textGrey font-semibold uppercase tracking-wider">
+                            <th className="px-6 py-4">Food Name</th>
+                            <th className="px-6 py-4">Serving Size</th>
+                            <th className="px-6 py-4">Calories (kcal)</th>
+                            <th className="px-6 py-4">Protein (g)</th>
+                            <th className="px-6 py-4">Carbs (g)</th>
+                            <th className="px-6 py-4">Fat (g)</th>
+                            <th className="px-6 py-4">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-[#0f1525] font-medium text-white">
+                          {paginatedPending.length === 0 ? (
+                            <tr>
+                              <td colSpan={7} className="px-6 py-8 text-center text-textGrey">
+                                No pending foods to approve.
+                              </td>
+                            </tr>
+                          ) : paginatedPending.map(food => (
+                            <tr key={food.id} className="hover:bg-[#111624]/30 transition-all">
+                              <td className="px-6 py-4 font-bold text-yellow-400">{food.name}</td>
+                              <td className="px-6 py-4">{food.baseServingSize}g</td>
+                              <td className="px-6 py-4 text-neonGreen">{food.baseCalories}</td>
+                              <td className="px-6 py-4">{food.baseProtein}g</td>
+                              <td className="px-6 py-4">{food.baseCarbs}g</td>
+                              <td className="px-6 py-4">{food.baseFat}g</td>
+                              <td className="px-6 py-4 flex gap-3">
+                                <button onClick={() => openEditFood(food)} className="bg-neonGreen hover:bg-neonGreen/90 text-black px-3 py-1.5 rounded text-xs font-bold transition-all">Edit & Approve</button>
+                                <button onClick={() => handleDeleteFood(food.id)} className="text-red-400 hover:text-red-500 transition-all"><Trash className="w-4 h-4" /></button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      
+                      <div className="p-4 border-t border-[#0f1525] flex items-center justify-between text-xs text-textGrey bg-[#090d16]/80">
+                        <span>Showing {filteredPending.length > 0 ? (pendingFoodPage * ITEMS_PER_PAGE + 1) : 0}-{Math.min((pendingFoodPage + 1) * ITEMS_PER_PAGE, filteredPending.length)} of {filteredPending.length} items</span>
+                        <div className="flex gap-2">
+                          <button 
+                            disabled={pendingFoodPage === 0} 
+                            onClick={() => setPendingFoodPage(pendingFoodPage - 1)}
+                            className="px-3 py-1.5 rounded bg-[#111624] border border-[#1d273d] text-white hover:border-neonGreen/45 disabled:opacity-40 disabled:hover:border-[#1d273d] transition-all"
+                          >
+                            Previous
+                          </button>
+                          <span className="flex items-center px-2">Page {pendingFoodPage + 1} of {totalPendingPages}</span>
+                          <button 
+                            disabled={pendingFoodPage >= totalPendingPages - 1} 
+                            onClick={() => setPendingFoodPage(pendingFoodPage + 1)}
                             className="px-3 py-1.5 rounded bg-[#111624] border border-[#1d273d] text-white hover:border-neonGreen/45 disabled:opacity-40 disabled:hover:border-[#1d273d] transition-all"
                           >
                             Next

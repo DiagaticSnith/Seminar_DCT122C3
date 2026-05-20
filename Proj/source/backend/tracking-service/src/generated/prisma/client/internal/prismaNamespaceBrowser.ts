@@ -81,7 +81,8 @@ export const MasterFoodScalarFieldEnum = {
   baseCalories: 'baseCalories',
   baseProtein: 'baseProtein',
   baseCarbs: 'baseCarbs',
-  baseFat: 'baseFat'
+  baseFat: 'baseFat',
+  status: 'status'
 } as const
 
 export type MasterFoodScalarFieldEnum = (typeof MasterFoodScalarFieldEnum)[keyof typeof MasterFoodScalarFieldEnum]
@@ -116,6 +117,7 @@ export const FoodLogScalarFieldEnum = {
   id: 'id',
   dailyLogId: 'dailyLogId',
   foodId: 'foodId',
+  foodName: 'foodName',
   grams: 'grams',
   calories: 'calories',
   protein: 'protein',

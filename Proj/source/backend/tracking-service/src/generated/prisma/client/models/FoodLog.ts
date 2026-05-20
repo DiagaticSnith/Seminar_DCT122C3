@@ -46,6 +46,7 @@ export type FoodLogMinAggregateOutputType = {
   id: string | null
   dailyLogId: string | null
   foodId: string | null
+  foodName: string | null
   grams: number | null
   calories: number | null
   protein: number | null
@@ -57,6 +58,7 @@ export type FoodLogMaxAggregateOutputType = {
   id: string | null
   dailyLogId: string | null
   foodId: string | null
+  foodName: string | null
   grams: number | null
   calories: number | null
   protein: number | null
@@ -68,6 +70,7 @@ export type FoodLogCountAggregateOutputType = {
   id: number
   dailyLogId: number
   foodId: number
+  foodName: number
   grams: number
   calories: number
   protein: number
@@ -97,6 +100,7 @@ export type FoodLogMinAggregateInputType = {
   id?: true
   dailyLogId?: true
   foodId?: true
+  foodName?: true
   grams?: true
   calories?: true
   protein?: true
@@ -108,6 +112,7 @@ export type FoodLogMaxAggregateInputType = {
   id?: true
   dailyLogId?: true
   foodId?: true
+  foodName?: true
   grams?: true
   calories?: true
   protein?: true
@@ -119,6 +124,7 @@ export type FoodLogCountAggregateInputType = {
   id?: true
   dailyLogId?: true
   foodId?: true
+  foodName?: true
   grams?: true
   calories?: true
   protein?: true
@@ -216,7 +222,8 @@ export type FoodLogGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type FoodLogGroupByOutputType = {
   id: string
   dailyLogId: string
-  foodId: string
+  foodId: string | null
+  foodName: string | null
   grams: number
   calories: number
   protein: number
@@ -250,20 +257,22 @@ export type FoodLogWhereInput = {
   NOT?: Prisma.FoodLogWhereInput | Prisma.FoodLogWhereInput[]
   id?: Prisma.StringFilter<"FoodLog"> | string
   dailyLogId?: Prisma.StringFilter<"FoodLog"> | string
-  foodId?: Prisma.StringFilter<"FoodLog"> | string
+  foodId?: Prisma.StringNullableFilter<"FoodLog"> | string | null
+  foodName?: Prisma.StringNullableFilter<"FoodLog"> | string | null
   grams?: Prisma.FloatFilter<"FoodLog"> | number
   calories?: Prisma.FloatFilter<"FoodLog"> | number
   protein?: Prisma.FloatFilter<"FoodLog"> | number
   carbs?: Prisma.FloatFilter<"FoodLog"> | number
   fat?: Prisma.FloatFilter<"FoodLog"> | number
   dailyLog?: Prisma.XOR<Prisma.DailyLogScalarRelationFilter, Prisma.DailyLogWhereInput>
-  food?: Prisma.XOR<Prisma.MasterFoodScalarRelationFilter, Prisma.MasterFoodWhereInput>
+  food?: Prisma.XOR<Prisma.MasterFoodNullableScalarRelationFilter, Prisma.MasterFoodWhereInput> | null
 }
 
 export type FoodLogOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   dailyLogId?: Prisma.SortOrder
-  foodId?: Prisma.SortOrder
+  foodId?: Prisma.SortOrderInput | Prisma.SortOrder
+  foodName?: Prisma.SortOrderInput | Prisma.SortOrder
   grams?: Prisma.SortOrder
   calories?: Prisma.SortOrder
   protein?: Prisma.SortOrder
@@ -279,20 +288,22 @@ export type FoodLogWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.FoodLogWhereInput[]
   NOT?: Prisma.FoodLogWhereInput | Prisma.FoodLogWhereInput[]
   dailyLogId?: Prisma.StringFilter<"FoodLog"> | string
-  foodId?: Prisma.StringFilter<"FoodLog"> | string
+  foodId?: Prisma.StringNullableFilter<"FoodLog"> | string | null
+  foodName?: Prisma.StringNullableFilter<"FoodLog"> | string | null
   grams?: Prisma.FloatFilter<"FoodLog"> | number
   calories?: Prisma.FloatFilter<"FoodLog"> | number
   protein?: Prisma.FloatFilter<"FoodLog"> | number
   carbs?: Prisma.FloatFilter<"FoodLog"> | number
   fat?: Prisma.FloatFilter<"FoodLog"> | number
   dailyLog?: Prisma.XOR<Prisma.DailyLogScalarRelationFilter, Prisma.DailyLogWhereInput>
-  food?: Prisma.XOR<Prisma.MasterFoodScalarRelationFilter, Prisma.MasterFoodWhereInput>
+  food?: Prisma.XOR<Prisma.MasterFoodNullableScalarRelationFilter, Prisma.MasterFoodWhereInput> | null
 }, "id">
 
 export type FoodLogOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   dailyLogId?: Prisma.SortOrder
-  foodId?: Prisma.SortOrder
+  foodId?: Prisma.SortOrderInput | Prisma.SortOrder
+  foodName?: Prisma.SortOrderInput | Prisma.SortOrder
   grams?: Prisma.SortOrder
   calories?: Prisma.SortOrder
   protein?: Prisma.SortOrder
@@ -311,7 +322,8 @@ export type FoodLogScalarWhereWithAggregatesInput = {
   NOT?: Prisma.FoodLogScalarWhereWithAggregatesInput | Prisma.FoodLogScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"FoodLog"> | string
   dailyLogId?: Prisma.StringWithAggregatesFilter<"FoodLog"> | string
-  foodId?: Prisma.StringWithAggregatesFilter<"FoodLog"> | string
+  foodId?: Prisma.StringNullableWithAggregatesFilter<"FoodLog"> | string | null
+  foodName?: Prisma.StringNullableWithAggregatesFilter<"FoodLog"> | string | null
   grams?: Prisma.FloatWithAggregatesFilter<"FoodLog"> | number
   calories?: Prisma.FloatWithAggregatesFilter<"FoodLog"> | number
   protein?: Prisma.FloatWithAggregatesFilter<"FoodLog"> | number
@@ -321,19 +333,21 @@ export type FoodLogScalarWhereWithAggregatesInput = {
 
 export type FoodLogCreateInput = {
   id?: string
+  foodName?: string | null
   grams: number
   calories: number
   protein: number
   carbs: number
   fat: number
   dailyLog: Prisma.DailyLogCreateNestedOneWithoutFoodLogsInput
-  food: Prisma.MasterFoodCreateNestedOneWithoutLogsInput
+  food?: Prisma.MasterFoodCreateNestedOneWithoutLogsInput
 }
 
 export type FoodLogUncheckedCreateInput = {
   id?: string
   dailyLogId: string
-  foodId: string
+  foodId?: string | null
+  foodName?: string | null
   grams: number
   calories: number
   protein: number
@@ -343,19 +357,21 @@ export type FoodLogUncheckedCreateInput = {
 
 export type FoodLogUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  foodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   grams?: Prisma.FloatFieldUpdateOperationsInput | number
   calories?: Prisma.FloatFieldUpdateOperationsInput | number
   protein?: Prisma.FloatFieldUpdateOperationsInput | number
   carbs?: Prisma.FloatFieldUpdateOperationsInput | number
   fat?: Prisma.FloatFieldUpdateOperationsInput | number
   dailyLog?: Prisma.DailyLogUpdateOneRequiredWithoutFoodLogsNestedInput
-  food?: Prisma.MasterFoodUpdateOneRequiredWithoutLogsNestedInput
+  food?: Prisma.MasterFoodUpdateOneWithoutLogsNestedInput
 }
 
 export type FoodLogUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   dailyLogId?: Prisma.StringFieldUpdateOperationsInput | string
-  foodId?: Prisma.StringFieldUpdateOperationsInput | string
+  foodId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  foodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   grams?: Prisma.FloatFieldUpdateOperationsInput | number
   calories?: Prisma.FloatFieldUpdateOperationsInput | number
   protein?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -366,7 +382,8 @@ export type FoodLogUncheckedUpdateInput = {
 export type FoodLogCreateManyInput = {
   id?: string
   dailyLogId: string
-  foodId: string
+  foodId?: string | null
+  foodName?: string | null
   grams: number
   calories: number
   protein: number
@@ -376,6 +393,7 @@ export type FoodLogCreateManyInput = {
 
 export type FoodLogUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  foodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   grams?: Prisma.FloatFieldUpdateOperationsInput | number
   calories?: Prisma.FloatFieldUpdateOperationsInput | number
   protein?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -386,7 +404,8 @@ export type FoodLogUpdateManyMutationInput = {
 export type FoodLogUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   dailyLogId?: Prisma.StringFieldUpdateOperationsInput | string
-  foodId?: Prisma.StringFieldUpdateOperationsInput | string
+  foodId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  foodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   grams?: Prisma.FloatFieldUpdateOperationsInput | number
   calories?: Prisma.FloatFieldUpdateOperationsInput | number
   protein?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -408,6 +427,7 @@ export type FoodLogCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   dailyLogId?: Prisma.SortOrder
   foodId?: Prisma.SortOrder
+  foodName?: Prisma.SortOrder
   grams?: Prisma.SortOrder
   calories?: Prisma.SortOrder
   protein?: Prisma.SortOrder
@@ -427,6 +447,7 @@ export type FoodLogMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   dailyLogId?: Prisma.SortOrder
   foodId?: Prisma.SortOrder
+  foodName?: Prisma.SortOrder
   grams?: Prisma.SortOrder
   calories?: Prisma.SortOrder
   protein?: Prisma.SortOrder
@@ -438,6 +459,7 @@ export type FoodLogMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   dailyLogId?: Prisma.SortOrder
   foodId?: Prisma.SortOrder
+  foodName?: Prisma.SortOrder
   grams?: Prisma.SortOrder
   calories?: Prisma.SortOrder
   protein?: Prisma.SortOrder
@@ -539,6 +561,7 @@ export type FoodLogUncheckedUpdateManyWithoutDailyLogNestedInput = {
 
 export type FoodLogCreateWithoutFoodInput = {
   id?: string
+  foodName?: string | null
   grams: number
   calories: number
   protein: number
@@ -550,6 +573,7 @@ export type FoodLogCreateWithoutFoodInput = {
 export type FoodLogUncheckedCreateWithoutFoodInput = {
   id?: string
   dailyLogId: string
+  foodName?: string | null
   grams: number
   calories: number
   protein: number
@@ -589,7 +613,8 @@ export type FoodLogScalarWhereInput = {
   NOT?: Prisma.FoodLogScalarWhereInput | Prisma.FoodLogScalarWhereInput[]
   id?: Prisma.StringFilter<"FoodLog"> | string
   dailyLogId?: Prisma.StringFilter<"FoodLog"> | string
-  foodId?: Prisma.StringFilter<"FoodLog"> | string
+  foodId?: Prisma.StringNullableFilter<"FoodLog"> | string | null
+  foodName?: Prisma.StringNullableFilter<"FoodLog"> | string | null
   grams?: Prisma.FloatFilter<"FoodLog"> | number
   calories?: Prisma.FloatFilter<"FoodLog"> | number
   protein?: Prisma.FloatFilter<"FoodLog"> | number
@@ -599,17 +624,19 @@ export type FoodLogScalarWhereInput = {
 
 export type FoodLogCreateWithoutDailyLogInput = {
   id?: string
+  foodName?: string | null
   grams: number
   calories: number
   protein: number
   carbs: number
   fat: number
-  food: Prisma.MasterFoodCreateNestedOneWithoutLogsInput
+  food?: Prisma.MasterFoodCreateNestedOneWithoutLogsInput
 }
 
 export type FoodLogUncheckedCreateWithoutDailyLogInput = {
   id?: string
-  foodId: string
+  foodId?: string | null
+  foodName?: string | null
   grams: number
   calories: number
   protein: number
@@ -646,6 +673,7 @@ export type FoodLogUpdateManyWithWhereWithoutDailyLogInput = {
 export type FoodLogCreateManyFoodInput = {
   id?: string
   dailyLogId: string
+  foodName?: string | null
   grams: number
   calories: number
   protein: number
@@ -655,6 +683,7 @@ export type FoodLogCreateManyFoodInput = {
 
 export type FoodLogUpdateWithoutFoodInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  foodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   grams?: Prisma.FloatFieldUpdateOperationsInput | number
   calories?: Prisma.FloatFieldUpdateOperationsInput | number
   protein?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -666,6 +695,7 @@ export type FoodLogUpdateWithoutFoodInput = {
 export type FoodLogUncheckedUpdateWithoutFoodInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   dailyLogId?: Prisma.StringFieldUpdateOperationsInput | string
+  foodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   grams?: Prisma.FloatFieldUpdateOperationsInput | number
   calories?: Prisma.FloatFieldUpdateOperationsInput | number
   protein?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -676,6 +706,7 @@ export type FoodLogUncheckedUpdateWithoutFoodInput = {
 export type FoodLogUncheckedUpdateManyWithoutFoodInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   dailyLogId?: Prisma.StringFieldUpdateOperationsInput | string
+  foodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   grams?: Prisma.FloatFieldUpdateOperationsInput | number
   calories?: Prisma.FloatFieldUpdateOperationsInput | number
   protein?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -685,7 +716,8 @@ export type FoodLogUncheckedUpdateManyWithoutFoodInput = {
 
 export type FoodLogCreateManyDailyLogInput = {
   id?: string
-  foodId: string
+  foodId?: string | null
+  foodName?: string | null
   grams: number
   calories: number
   protein: number
@@ -695,17 +727,19 @@ export type FoodLogCreateManyDailyLogInput = {
 
 export type FoodLogUpdateWithoutDailyLogInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  foodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   grams?: Prisma.FloatFieldUpdateOperationsInput | number
   calories?: Prisma.FloatFieldUpdateOperationsInput | number
   protein?: Prisma.FloatFieldUpdateOperationsInput | number
   carbs?: Prisma.FloatFieldUpdateOperationsInput | number
   fat?: Prisma.FloatFieldUpdateOperationsInput | number
-  food?: Prisma.MasterFoodUpdateOneRequiredWithoutLogsNestedInput
+  food?: Prisma.MasterFoodUpdateOneWithoutLogsNestedInput
 }
 
 export type FoodLogUncheckedUpdateWithoutDailyLogInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  foodId?: Prisma.StringFieldUpdateOperationsInput | string
+  foodId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  foodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   grams?: Prisma.FloatFieldUpdateOperationsInput | number
   calories?: Prisma.FloatFieldUpdateOperationsInput | number
   protein?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -715,7 +749,8 @@ export type FoodLogUncheckedUpdateWithoutDailyLogInput = {
 
 export type FoodLogUncheckedUpdateManyWithoutDailyLogInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  foodId?: Prisma.StringFieldUpdateOperationsInput | string
+  foodId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  foodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   grams?: Prisma.FloatFieldUpdateOperationsInput | number
   calories?: Prisma.FloatFieldUpdateOperationsInput | number
   protein?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -729,45 +764,49 @@ export type FoodLogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   dailyLogId?: boolean
   foodId?: boolean
+  foodName?: boolean
   grams?: boolean
   calories?: boolean
   protein?: boolean
   carbs?: boolean
   fat?: boolean
   dailyLog?: boolean | Prisma.DailyLogDefaultArgs<ExtArgs>
-  food?: boolean | Prisma.MasterFoodDefaultArgs<ExtArgs>
+  food?: boolean | Prisma.FoodLog$foodArgs<ExtArgs>
 }, ExtArgs["result"]["foodLog"]>
 
 export type FoodLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   dailyLogId?: boolean
   foodId?: boolean
+  foodName?: boolean
   grams?: boolean
   calories?: boolean
   protein?: boolean
   carbs?: boolean
   fat?: boolean
   dailyLog?: boolean | Prisma.DailyLogDefaultArgs<ExtArgs>
-  food?: boolean | Prisma.MasterFoodDefaultArgs<ExtArgs>
+  food?: boolean | Prisma.FoodLog$foodArgs<ExtArgs>
 }, ExtArgs["result"]["foodLog"]>
 
 export type FoodLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   dailyLogId?: boolean
   foodId?: boolean
+  foodName?: boolean
   grams?: boolean
   calories?: boolean
   protein?: boolean
   carbs?: boolean
   fat?: boolean
   dailyLog?: boolean | Prisma.DailyLogDefaultArgs<ExtArgs>
-  food?: boolean | Prisma.MasterFoodDefaultArgs<ExtArgs>
+  food?: boolean | Prisma.FoodLog$foodArgs<ExtArgs>
 }, ExtArgs["result"]["foodLog"]>
 
 export type FoodLogSelectScalar = {
   id?: boolean
   dailyLogId?: boolean
   foodId?: boolean
+  foodName?: boolean
   grams?: boolean
   calories?: boolean
   protein?: boolean
@@ -775,30 +814,31 @@ export type FoodLogSelectScalar = {
   fat?: boolean
 }
 
-export type FoodLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "dailyLogId" | "foodId" | "grams" | "calories" | "protein" | "carbs" | "fat", ExtArgs["result"]["foodLog"]>
+export type FoodLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "dailyLogId" | "foodId" | "foodName" | "grams" | "calories" | "protein" | "carbs" | "fat", ExtArgs["result"]["foodLog"]>
 export type FoodLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   dailyLog?: boolean | Prisma.DailyLogDefaultArgs<ExtArgs>
-  food?: boolean | Prisma.MasterFoodDefaultArgs<ExtArgs>
+  food?: boolean | Prisma.FoodLog$foodArgs<ExtArgs>
 }
 export type FoodLogIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   dailyLog?: boolean | Prisma.DailyLogDefaultArgs<ExtArgs>
-  food?: boolean | Prisma.MasterFoodDefaultArgs<ExtArgs>
+  food?: boolean | Prisma.FoodLog$foodArgs<ExtArgs>
 }
 export type FoodLogIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   dailyLog?: boolean | Prisma.DailyLogDefaultArgs<ExtArgs>
-  food?: boolean | Prisma.MasterFoodDefaultArgs<ExtArgs>
+  food?: boolean | Prisma.FoodLog$foodArgs<ExtArgs>
 }
 
 export type $FoodLogPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "FoodLog"
   objects: {
     dailyLog: Prisma.$DailyLogPayload<ExtArgs>
-    food: Prisma.$MasterFoodPayload<ExtArgs>
+    food: Prisma.$MasterFoodPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     dailyLogId: string
-    foodId: string
+    foodId: string | null
+    foodName: string | null
     grams: number
     calories: number
     protein: number
@@ -1199,7 +1239,7 @@ readonly fields: FoodLogFieldRefs;
 export interface Prisma__FoodLogClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   dailyLog<T extends Prisma.DailyLogDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DailyLogDefaultArgs<ExtArgs>>): Prisma.Prisma__DailyLogClient<runtime.Types.Result.GetResult<Prisma.$DailyLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  food<T extends Prisma.MasterFoodDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MasterFoodDefaultArgs<ExtArgs>>): Prisma.Prisma__MasterFoodClient<runtime.Types.Result.GetResult<Prisma.$MasterFoodPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  food<T extends Prisma.FoodLog$foodArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FoodLog$foodArgs<ExtArgs>>): Prisma.Prisma__MasterFoodClient<runtime.Types.Result.GetResult<Prisma.$MasterFoodPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1232,6 +1272,7 @@ export interface FoodLogFieldRefs {
   readonly id: Prisma.FieldRef<"FoodLog", 'String'>
   readonly dailyLogId: Prisma.FieldRef<"FoodLog", 'String'>
   readonly foodId: Prisma.FieldRef<"FoodLog", 'String'>
+  readonly foodName: Prisma.FieldRef<"FoodLog", 'String'>
   readonly grams: Prisma.FieldRef<"FoodLog", 'Float'>
   readonly calories: Prisma.FieldRef<"FoodLog", 'Float'>
   readonly protein: Prisma.FieldRef<"FoodLog", 'Float'>
@@ -1635,6 +1676,25 @@ export type FoodLogDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many FoodLogs to delete.
    */
   limit?: number
+}
+
+/**
+ * FoodLog.food
+ */
+export type FoodLog$foodArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MasterFood
+   */
+  select?: Prisma.MasterFoodSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MasterFood
+   */
+  omit?: Prisma.MasterFoodOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MasterFoodInclude<ExtArgs> | null
+  where?: Prisma.MasterFoodWhereInput
 }
 
 /**
