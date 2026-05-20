@@ -75,7 +75,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 16),
               const Text(
-                'Welcome to Your',
+                'Welcome to',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 28,
@@ -84,7 +84,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
               const Text(
-                'Virtual PT',
+                'GymFitness',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 32,

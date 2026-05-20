@@ -127,7 +127,8 @@ exports.Prisma.MasterFoodScalarFieldEnum = {
   baseCalories: 'baseCalories',
   baseProtein: 'baseProtein',
   baseCarbs: 'baseCarbs',
-  baseFat: 'baseFat'
+  baseFat: 'baseFat',
+  status: 'status'
 };
 
 exports.Prisma.MasterExerciseScalarFieldEnum = {
@@ -152,7 +153,10 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-
+exports.FoodStatus = exports.$Enums.FoodStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED'
+};
 
 exports.Prisma.ModelName = {
   MasterFood: 'MasterFood',

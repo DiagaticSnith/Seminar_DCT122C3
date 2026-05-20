@@ -48,16 +48,16 @@ class _HomeScreenState extends State<HomeScreen> {
     final schedule = trackingProvider.schedule;
     final analytics = trackingProvider.analyticsLogs;
 
-    final targetCal = (profile['targetCalories'] ?? 2500).toDouble();
+    final targetCal = (profile['targetCalories'] ?? 0).toDouble();
     final consumedCal = (dailyLog['caloriesConsumed'] ?? 0).toDouble();
 
-    final targetP = (profile['targetProtein'] ?? 150).toDouble();
+    final targetP = (profile['targetProtein'] ?? 0).toDouble();
     final consumedP = (dailyLog['proteinConsumed'] ?? 0).toDouble();
 
-    final targetC = (profile['targetCarbs'] ?? 250).toDouble();
+    final targetC = (profile['targetCarbs'] ?? 0).toDouble();
     final consumedC = (dailyLog['carbsConsumed'] ?? 0).toDouble();
 
-    final targetF = (profile['targetFat'] ?? 70).toDouble();
+    final targetF = (profile['targetFat'] ?? 0).toDouble();
     final consumedF = (dailyLog['fatConsumed'] ?? 0).toDouble();
 
     final workoutStyle = profile['workoutStyle'] ?? 'None';
@@ -193,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       : ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: schedule.length,
+                          itemCount: schedule.length > 6 ? 6 : schedule.length,
                           separatorBuilder: (_, __) => const SizedBox(height: 12),
                           itemBuilder: (context, index) {
                             final item = schedule[index];
@@ -295,16 +295,20 @@ class GymCardWidget extends StatelessWidget {
                 Text(
                   ex['name'] ?? 'Exercise',
                   style: TextStyle(
-                    color: completed ? AppColors.textGrey : Colors.white,
+                    color: completed ? AppColors.textGrey.withOpacity(0.5) : Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     decoration: completed ? TextDecoration.lineThrough : null,
+                    decorationColor: completed ? AppColors.textGrey.withOpacity(0.5) : null,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '${item['sets']} Sets • ${item['reps']} Reps | Category: ${ex['category'] ?? ''}',
-                  style: const TextStyle(color: AppColors.textGrey, fontSize: 12),
+                  style: TextStyle(
+                    color: completed ? AppColors.textGrey.withOpacity(0.4) : AppColors.textGrey,
+                    fontSize: 12,
+                  ),
                 ),
               ],
             ),
@@ -419,16 +423,20 @@ class _YogaCardWidgetState extends State<YogaCardWidget> {
                     Text(
                       ex['name'] ?? 'Yoga Pose',
                       style: TextStyle(
-                        color: completed ? AppColors.textGrey : Colors.white,
+                        color: completed ? AppColors.textGrey.withOpacity(0.5) : Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         decoration: completed ? TextDecoration.lineThrough : null,
+                        decorationColor: completed ? AppColors.textGrey.withOpacity(0.5) : null,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       'Duration: ${widget.item['duration_seconds'] ?? 300}s | Category: ${ex['category'] ?? ''}',
-                      style: const TextStyle(color: AppColors.textGrey, fontSize: 12),
+                      style: TextStyle(
+                        color: completed ? AppColors.textGrey.withOpacity(0.4) : AppColors.textGrey,
+                        fontSize: 12,
+                      ),
                     ),
                   ],
                 ),

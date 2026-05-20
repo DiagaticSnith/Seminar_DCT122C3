@@ -103,8 +103,9 @@ export default function App() {
   const [workoutDistribution, setWorkoutDistribution] = useState<WorkoutDistItem[]>([]);
 
   // Master Data State
-  const [masterTab, setMasterTab] = useState<'food' | 'exercise'>('food');
+  const [masterTab, setMasterTab] = useState<'food' | 'pendingFood' | 'exercise'>('food');
   const [foods, setFoods] = useState<FoodItem[]>([]);
+  const [pendingFoods, setPendingFoods] = useState<FoodItem[]>([]);
   const [exercises, setExercises] = useState<ExerciseItem[]>([]);
 
   // Modals for CRUD
@@ -138,6 +139,21 @@ export default function App() {
 
   // User Management State
   const [users, setUsers] = useState<UserItem[]>([]);
+
+  // Pagination State
+  const [foodPage, setFoodPage] = useState(0);
+  const [pendingFoodPage, setPendingFoodPage] = useState(0);
+  const [exercisePage, setExercisePage] = useState(0);
+  const [userPage, setUserPage] = useState(0);
+  const ITEMS_PER_PAGE = 8;
+
+  // Reset pagination on search query change or tab change
+  useEffect(() => {
+    setFoodPage(0);
+    setPendingFoodPage(0);
+    setExercisePage(0);
+    setUserPage(0);
+  }, [searchQuery, activeTab, masterTab]);
 
   // Fetch initial dashboard metrics
   const loadDashboardData = async () => {
@@ -175,6 +191,11 @@ export default function App() {
       const foodRes = await api.get('/master/food');
       if (foodRes.data?.success || Array.isArray(foodRes.data?.data)) {
         setFoods(foodRes.data.data || foodRes.data);
+      }
+
+      const pendingRes = await api.get('/foods/pending');
+      if (pendingRes.data?.success || Array.isArray(pendingRes.data?.data)) {
+        setPendingFoods(pendingRes.data.data || pendingRes.data);
       }
 
       const exerciseRes = await api.get('/master/exercises');
@@ -318,10 +339,19 @@ export default function App() {
     e.preventDefault();
     try {
       if (editingFood) {
-        const res = await api.put(`/master/food/${editingFood.id}`, foodForm);
-        if (res.data?.success) {
-          setFoods(foods.map(f => f.id === editingFood.id ? { ...f, ...foodForm } : f));
-          setFoodModalOpen(false);
+        if (masterTab === 'pendingFood') {
+          const res = await api.put(`/foods/pending/${editingFood.id}`, foodForm);
+          if (res.data?.success) {
+            setPendingFoods(pendingFoods.filter(f => f.id !== editingFood.id));
+            setFoods([...foods, { ...editingFood, ...foodForm }]);
+            setFoodModalOpen(false);
+          }
+        } else {
+          const res = await api.put(`/master/food/${editingFood.id}`, foodForm);
+          if (res.data?.success) {
+            setFoods(foods.map(f => f.id === editingFood.id ? { ...f, ...foodForm } : f));
+            setFoodModalOpen(false);
+          }
         }
       } else {
         const res = await api.post('/master/food', foodForm);
@@ -341,6 +371,7 @@ export default function App() {
       const res = await api.delete(`/master/food/${id}`);
       if (res.data?.success) {
         setFoods(foods.filter(f => f.id !== id));
+        setPendingFoods(pendingFoods.filter(f => f.id !== id));
       }
     } catch (err) {
       console.error('Failed to delete food item', err);
@@ -763,6 +794,14 @@ export default function App() {
                   Food Dictionary
                 </button>
                 <button
+                  onClick={() => setMasterTab('pendingFood')}
+                  className={`pb-3 font-semibold text-sm transition-all border-b-2 ${
+                    masterTab === 'pendingFood' ? 'border-neonGreen text-neonGreen' : 'border-transparent text-textGrey hover:text-white'
+                  }`}
+                >
+                  Pending Queue
+                </button>
+                <button
                   onClick={() => setMasterTab('exercise')}
                   className={`pb-3 font-semibold text-sm transition-all border-b-2 ${
                     masterTab === 'exercise' ? 'border-neonGreen text-neonGreen' : 'border-transparent text-textGrey hover:text-white'
@@ -773,105 +812,229 @@ export default function App() {
               </div>
 
               {masterTab === 'food' ? (
-                <div className="bg-[#090d16] border border-[#0f1525] rounded-xl overflow-hidden">
-                  <div className="p-6 border-b border-[#0f1525] flex justify-between items-center">
-                    <h3 className="text-sm font-bold">Nutrition Database</h3>
-                    <button 
-                      onClick={openAddFood}
-                      className="bg-neonGreen hover:bg-neonGreen/95 text-black font-semibold text-xs px-4 py-2 rounded-lg flex items-center gap-1.5 transition-all shadow-[0_0_10px_rgba(57,255,20,0.2)]"
-                    >
-                      <Plus className="w-3.5 h-3.5" />
-                      Add Food Item
-                    </button>
-                  </div>
-                  <table className="w-full text-left border-collapse text-xs">
-                    <thead>
-                      <tr className="border-b border-[#0f1525] text-textGrey font-semibold uppercase tracking-wider">
-                        <th className="px-6 py-4">Food Name</th>
-                        <th className="px-6 py-4">Serving Size</th>
-                        <th className="px-6 py-4">Calories (kcal)</th>
-                        <th className="px-6 py-4">Protein (g)</th>
-                        <th className="px-6 py-4">Carbs (g)</th>
-                        <th className="px-6 py-4">Fat (g)</th>
-                        <th className="px-6 py-4">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[#0f1525] font-medium text-white">
-                      {foods
-                        .filter(f => f.name.toLowerCase().includes(searchQuery.toLowerCase()))
-                        .map(food => (
-                          <tr key={food.id} className="hover:bg-[#111624]/30 transition-all">
-                            <td className="px-6 py-4 font-bold">{food.name}</td>
-                            <td className="px-6 py-4">{food.baseServingSize}g</td>
-                            <td className="px-6 py-4 text-neonGreen">{food.baseCalories}</td>
-                            <td className="px-6 py-4">{food.baseProtein}g</td>
-                            <td className="px-6 py-4">{food.baseCarbs}g</td>
-                            <td className="px-6 py-4">{food.baseFat}g</td>
-                            <td className="px-6 py-4 flex gap-3">
-                              <button onClick={() => openEditFood(food)} className="text-neonGreen hover:text-white transition-all"><Edit className="w-4 h-4" /></button>
-                              <button onClick={() => handleDeleteFood(food.id)} className="text-red-400 hover:text-red-500 transition-all"><Trash className="w-4 h-4" /></button>
-                            </td>
+                (() => {
+                  const filteredFoods = foods.filter(f => f.name.toLowerCase().includes(searchQuery.toLowerCase()));
+                  const totalFoodPages = Math.ceil(filteredFoods.length / ITEMS_PER_PAGE) || 1;
+                  const paginatedFoods = filteredFoods.slice(foodPage * ITEMS_PER_PAGE, (foodPage + 1) * ITEMS_PER_PAGE);
+
+                  return (
+                    <div className="bg-[#090d16] border border-[#0f1525] rounded-xl overflow-hidden">
+                      <div className="p-6 border-b border-[#0f1525] flex justify-between items-center">
+                        <h3 className="text-sm font-bold">Nutrition Database</h3>
+                        <button 
+                          onClick={openAddFood}
+                          className="bg-neonGreen hover:bg-neonGreen/95 text-black font-semibold text-xs px-4 py-2 rounded-lg flex items-center gap-1.5 transition-all shadow-[0_0_10px_rgba(57,255,20,0.2)]"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                          Add Food Item
+                        </button>
+                      </div>
+                      <table className="w-full text-left border-collapse text-xs">
+                        <thead>
+                          <tr className="border-b border-[#0f1525] text-textGrey font-semibold uppercase tracking-wider">
+                            <th className="px-6 py-4">Food Name</th>
+                            <th className="px-6 py-4">Serving Size</th>
+                            <th className="px-6 py-4">Calories (kcal)</th>
+                            <th className="px-6 py-4">Protein (g)</th>
+                            <th className="px-6 py-4">Carbs (g)</th>
+                            <th className="px-6 py-4">Fat (g)</th>
+                            <th className="px-6 py-4">Actions</th>
                           </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                        </thead>
+                        <tbody className="divide-y divide-[#0f1525] font-medium text-white">
+                          {paginatedFoods.map(food => (
+                            <tr key={food.id} className="hover:bg-[#111624]/30 transition-all">
+                              <td className="px-6 py-4 font-bold">{food.name}</td>
+                              <td className="px-6 py-4">{food.baseServingSize}g</td>
+                              <td className="px-6 py-4 text-neonGreen">{food.baseCalories}</td>
+                              <td className="px-6 py-4">{food.baseProtein}g</td>
+                              <td className="px-6 py-4">{food.baseCarbs}g</td>
+                              <td className="px-6 py-4">{food.baseFat}g</td>
+                              <td className="px-6 py-4 flex gap-3">
+                                <button onClick={() => openEditFood(food)} className="text-neonGreen hover:text-white transition-all"><Edit className="w-4 h-4" /></button>
+                                <button onClick={() => handleDeleteFood(food.id)} className="text-red-400 hover:text-red-500 transition-all"><Trash className="w-4 h-4" /></button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      
+                      <div className="p-4 border-t border-[#0f1525] flex items-center justify-between text-xs text-textGrey bg-[#090d16]/80">
+                        <span>Showing {filteredFoods.length > 0 ? (foodPage * ITEMS_PER_PAGE + 1) : 0}-{Math.min((foodPage + 1) * ITEMS_PER_PAGE, filteredFoods.length)} of {filteredFoods.length} items</span>
+                        <div className="flex gap-2">
+                          <button 
+                            disabled={foodPage === 0} 
+                            onClick={() => setFoodPage(foodPage - 1)}
+                            className="px-3 py-1.5 rounded bg-[#111624] border border-[#1d273d] text-white hover:border-neonGreen/45 disabled:opacity-40 disabled:hover:border-[#1d273d] transition-all"
+                          >
+                            Previous
+                          </button>
+                          <span className="flex items-center px-2">Page {foodPage + 1} of {totalFoodPages}</span>
+                          <button 
+                            disabled={foodPage >= totalFoodPages - 1} 
+                            onClick={() => setFoodPage(foodPage + 1)}
+                            className="px-3 py-1.5 rounded bg-[#111624] border border-[#1d273d] text-white hover:border-neonGreen/45 disabled:opacity-40 disabled:hover:border-[#1d273d] transition-all"
+                          >
+                            Next
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()
+              ) : masterTab === 'pendingFood' ? (
+                (() => {
+                  const filteredPending = pendingFoods.filter(f => f.name.toLowerCase().includes(searchQuery.toLowerCase()));
+                  const totalPendingPages = Math.ceil(filteredPending.length / ITEMS_PER_PAGE) || 1;
+                  const paginatedPending = filteredPending.slice(pendingFoodPage * ITEMS_PER_PAGE, (pendingFoodPage + 1) * ITEMS_PER_PAGE);
+
+                  return (
+                    <div className="bg-[#090d16] border border-[#0f1525] rounded-xl overflow-hidden">
+                      <div className="p-6 border-b border-[#0f1525] flex justify-between items-center">
+                        <h3 className="text-sm font-bold">Pending Food Queue</h3>
+                      </div>
+                      <table className="w-full text-left border-collapse text-xs">
+                        <thead>
+                          <tr className="border-b border-[#0f1525] text-textGrey font-semibold uppercase tracking-wider">
+                            <th className="px-6 py-4">Food Name</th>
+                            <th className="px-6 py-4">Serving Size</th>
+                            <th className="px-6 py-4">Calories (kcal)</th>
+                            <th className="px-6 py-4">Protein (g)</th>
+                            <th className="px-6 py-4">Carbs (g)</th>
+                            <th className="px-6 py-4">Fat (g)</th>
+                            <th className="px-6 py-4">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-[#0f1525] font-medium text-white">
+                          {paginatedPending.length === 0 ? (
+                            <tr>
+                              <td colSpan={7} className="px-6 py-8 text-center text-textGrey">
+                                No pending foods to approve.
+                              </td>
+                            </tr>
+                          ) : paginatedPending.map(food => (
+                            <tr key={food.id} className="hover:bg-[#111624]/30 transition-all">
+                              <td className="px-6 py-4 font-bold text-yellow-400">{food.name}</td>
+                              <td className="px-6 py-4">{food.baseServingSize}g</td>
+                              <td className="px-6 py-4 text-neonGreen">{food.baseCalories}</td>
+                              <td className="px-6 py-4">{food.baseProtein}g</td>
+                              <td className="px-6 py-4">{food.baseCarbs}g</td>
+                              <td className="px-6 py-4">{food.baseFat}g</td>
+                              <td className="px-6 py-4 flex gap-3">
+                                <button onClick={() => openEditFood(food)} className="bg-neonGreen hover:bg-neonGreen/90 text-black px-3 py-1.5 rounded text-xs font-bold transition-all">Edit & Approve</button>
+                                <button onClick={() => handleDeleteFood(food.id)} className="text-red-400 hover:text-red-500 transition-all"><Trash className="w-4 h-4" /></button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      
+                      <div className="p-4 border-t border-[#0f1525] flex items-center justify-between text-xs text-textGrey bg-[#090d16]/80">
+                        <span>Showing {filteredPending.length > 0 ? (pendingFoodPage * ITEMS_PER_PAGE + 1) : 0}-{Math.min((pendingFoodPage + 1) * ITEMS_PER_PAGE, filteredPending.length)} of {filteredPending.length} items</span>
+                        <div className="flex gap-2">
+                          <button 
+                            disabled={pendingFoodPage === 0} 
+                            onClick={() => setPendingFoodPage(pendingFoodPage - 1)}
+                            className="px-3 py-1.5 rounded bg-[#111624] border border-[#1d273d] text-white hover:border-neonGreen/45 disabled:opacity-40 disabled:hover:border-[#1d273d] transition-all"
+                          >
+                            Previous
+                          </button>
+                          <span className="flex items-center px-2">Page {pendingFoodPage + 1} of {totalPendingPages}</span>
+                          <button 
+                            disabled={pendingFoodPage >= totalPendingPages - 1} 
+                            onClick={() => setPendingFoodPage(pendingFoodPage + 1)}
+                            className="px-3 py-1.5 rounded bg-[#111624] border border-[#1d273d] text-white hover:border-neonGreen/45 disabled:opacity-40 disabled:hover:border-[#1d273d] transition-all"
+                          >
+                            Next
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()
               ) : (
-                <div className="bg-[#090d16] border border-[#0f1525] rounded-xl overflow-hidden">
-                  <div className="p-6 border-b border-[#0f1525] flex justify-between items-center">
-                    <h3 className="text-sm font-bold">Exercise Database</h3>
-                    <button 
-                      onClick={openAddExercise}
-                      className="bg-neonGreen hover:bg-neonGreen/95 text-black font-semibold text-xs px-4 py-2 rounded-lg flex items-center gap-1.5 transition-all shadow-[0_0_10px_rgba(57,255,20,0.2)]"
-                    >
-                      <Plus className="w-3.5 h-3.5" />
-                      Add Exercise
-                    </button>
-                  </div>
-                  <table className="w-full text-left border-collapse text-xs">
-                    <thead>
-                      <tr className="border-b border-[#0f1525] text-textGrey font-semibold uppercase tracking-wider">
-                        <th className="px-6 py-4">Name</th>
-                        <th className="px-6 py-4">Category</th>
-                        <th className="px-6 py-4">Tags</th>
-                        <th className="px-6 py-4">YouTube Link</th>
-                        <th className="px-6 py-4">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[#0f1525] font-medium text-white">
-                      {exercises
-                        .filter(ex => ex.name.toLowerCase().includes(searchQuery.toLowerCase()))
-                        .map(ex => (
-                          <tr key={ex.id} className="hover:bg-[#111624]/30 transition-all">
-                            <td className="px-6 py-4 font-bold">{ex.name}</td>
-                            <td className="px-6 py-4 text-cyan-400">{ex.category}</td>
-                            <td className="px-6 py-4">
-                              <div className="flex flex-wrap gap-1">
-                                {(ex.tags || []).map(tag => (
-                                  <span key={tag} className="px-1.5 py-0.5 rounded bg-[#111b15] text-[10px] text-neonGreen font-semibold border border-neonGreen/20">
-                                    {tag}
-                                  </span>
-                                ))}
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 max-w-xs truncate text-textGrey">
-                              {ex.youtubeLink ? (
-                                <a href={ex.youtubeLink} target="_blank" rel="noreferrer" className="text-cyan-400 hover:underline">
-                                  {ex.youtubeLink}
-                                </a>
-                              ) : (
-                                <span className="italic text-textGrey/50">None</span>
-                              )}
-                            </td>
-                            <td className="px-6 py-4 flex gap-3">
-                              <button onClick={() => openEditExercise(ex)} className="text-neonGreen hover:text-white transition-all"><Edit className="w-4 h-4" /></button>
-                              <button onClick={() => handleDeleteExercise(ex.id)} className="text-red-400 hover:text-red-500 transition-all"><Trash className="w-4 h-4" /></button>
-                            </td>
+                (() => {
+                  const filteredExercises = exercises.filter(ex => ex.name.toLowerCase().includes(searchQuery.toLowerCase()));
+                  const totalExercisePages = Math.ceil(filteredExercises.length / ITEMS_PER_PAGE) || 1;
+                  const paginatedExercises = filteredExercises.slice(exercisePage * ITEMS_PER_PAGE, (exercisePage + 1) * ITEMS_PER_PAGE);
+
+                  return (
+                    <div className="bg-[#090d16] border border-[#0f1525] rounded-xl overflow-hidden">
+                      <div className="p-6 border-b border-[#0f1525] flex justify-between items-center">
+                        <h3 className="text-sm font-bold">Exercise Database</h3>
+                        <button 
+                          onClick={openAddExercise}
+                          className="bg-neonGreen hover:bg-neonGreen/95 text-black font-semibold text-xs px-4 py-2 rounded-lg flex items-center gap-1.5 transition-all shadow-[0_0_10px_rgba(57,255,20,0.2)]"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                          Add Exercise
+                        </button>
+                      </div>
+                      <table className="w-full text-left border-collapse text-xs">
+                        <thead>
+                          <tr className="border-b border-[#0f1525] text-textGrey font-semibold uppercase tracking-wider">
+                            <th className="px-6 py-4">Name</th>
+                            <th className="px-6 py-4">Category</th>
+                            <th className="px-6 py-4">Tags</th>
+                            <th className="px-6 py-4">YouTube Link</th>
+                            <th className="px-6 py-4">Actions</th>
                           </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                        </thead>
+                        <tbody className="divide-y divide-[#0f1525] font-medium text-white">
+                          {paginatedExercises.map(ex => (
+                            <tr key={ex.id} className="hover:bg-[#111624]/30 transition-all">
+                              <td className="px-6 py-4 font-bold">{ex.name}</td>
+                              <td className="px-6 py-4 text-cyan-400">{ex.category}</td>
+                              <td className="px-6 py-4">
+                                <div className="flex flex-wrap gap-1">
+                                  {(ex.tags || []).map(tag => (
+                                    <span key={tag} className="px-1.5 py-0.5 rounded bg-[#111b15] text-[10px] text-neonGreen font-semibold border border-neonGreen/20">
+                                      {tag}
+                                    </span>
+                                  ))}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 max-w-xs truncate text-textGrey">
+                                {ex.youtubeLink ? (
+                                  <a href={ex.youtubeLink} target="_blank" rel="noreferrer" className="text-cyan-400 hover:underline">
+                                    {ex.youtubeLink}
+                                  </a>
+                                ) : (
+                                  <span className="italic text-textGrey/50">None</span>
+                                )}
+                              </td>
+                              <td className="px-6 py-4 flex gap-3">
+                                <button onClick={() => openEditExercise(ex)} className="text-neonGreen hover:text-white transition-all"><Edit className="w-4 h-4" /></button>
+                                <button onClick={() => handleDeleteExercise(ex.id)} className="text-red-400 hover:text-red-500 transition-all"><Trash className="w-4 h-4" /></button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+
+                      <div className="p-4 border-t border-[#0f1525] flex items-center justify-between text-xs text-textGrey bg-[#090d16]/80">
+                        <span>Showing {filteredExercises.length > 0 ? (exercisePage * ITEMS_PER_PAGE + 1) : 0}-{Math.min((exercisePage + 1) * ITEMS_PER_PAGE, filteredExercises.length)} of {filteredExercises.length} items</span>
+                        <div className="flex gap-2">
+                          <button 
+                            disabled={exercisePage === 0} 
+                            onClick={() => setExercisePage(exercisePage - 1)}
+                            className="px-3 py-1.5 rounded bg-[#111624] border border-[#1d273d] text-white hover:border-neonGreen/45 disabled:opacity-40 disabled:hover:border-[#1d273d] transition-all"
+                          >
+                            Previous
+                          </button>
+                          <span className="flex items-center px-2">Page {exercisePage + 1} of {totalExercisePages}</span>
+                          <button 
+                            disabled={exercisePage >= totalExercisePages - 1} 
+                            onClick={() => setExercisePage(exercisePage + 1)}
+                            className="px-3 py-1.5 rounded bg-[#111624] border border-[#1d273d] text-white hover:border-neonGreen/45 disabled:opacity-40 disabled:hover:border-[#1d273d] transition-all"
+                          >
+                            Next
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()
               )}
             </div>
           )}
@@ -981,58 +1144,85 @@ export default function App() {
           )}
 
           {activeTab === 'users' && (
-            <div className="bg-[#090d16] border border-[#0f1525] rounded-xl overflow-hidden">
-              <div className="p-6 border-b border-[#0f1525]">
-                <h3 className="text-sm font-bold">Registered Gym Members</h3>
-              </div>
-              <table className="w-full text-left border-collapse text-xs">
-                <thead>
-                  <tr className="border-b border-[#0f1525] text-textGrey font-semibold uppercase tracking-wider">
-                    <th className="px-6 py-4">User ID</th>
-                    <th className="px-6 py-4">Email</th>
-                    <th className="px-6 py-4">Account Role</th>
-                    <th className="px-6 py-4">Status</th>
-                    <th className="px-6 py-4">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#0f1525] font-medium text-white">
-                  {users
-                    .filter(u => u.email.toLowerCase().includes(searchQuery.toLowerCase()))
-                    .map(user => (
-                      <tr key={user.id} className="hover:bg-[#111624]/30 transition-all">
-                        <td className="px-6 py-4 font-mono text-[10px] text-textGrey">{user.id}</td>
-                        <td className="px-6 py-4 font-bold">{user.email}</td>
-                        <td className="px-6 py-4">{user.role}</td>
-                        <td className="px-6 py-4">
-                          <span className={`px-2 py-1 rounded text-[10px] font-bold ${
-                            user.suspended 
-                              ? 'bg-red-500/10 text-red-400 border border-red-500/20' 
-                              : 'bg-neonGreen/10 text-neonGreen border border-neonGreen/20'
-                          }`}>
-                            {user.suspended ? 'Suspended' : 'Active'}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          {user.role === 'ADMIN' ? (
-                            <span className="text-[10px] text-textGrey italic">Protected</span>
-                          ) : (
-                            <button
-                              onClick={() => handleToggleSuspend(user.id, user.suspended)}
-                              className={`px-3 py-1.5 rounded font-bold text-[10px] transition-all ${
-                                user.suspended 
-                                  ? 'bg-[#111b15] text-neonGreen hover:bg-neonGreen hover:text-black border border-neonGreen/30' 
-                                  : 'bg-red-950/40 text-red-400 hover:bg-red-500 hover:text-white border border-red-500/20'
-                              }`}
-                            >
-                              {user.suspended ? 'Activate' : 'Suspend'}
-                            </button>
-                          )}
-                        </td>
+            (() => {
+              const filteredUsers = users.filter(u => u.email.toLowerCase().includes(searchQuery.toLowerCase()));
+              const totalUserPages = Math.ceil(filteredUsers.length / ITEMS_PER_PAGE) || 1;
+              const paginatedUsers = filteredUsers.slice(userPage * ITEMS_PER_PAGE, (userPage + 1) * ITEMS_PER_PAGE);
+
+              return (
+                <div className="bg-[#090d16] border border-[#0f1525] rounded-xl overflow-hidden">
+                  <div className="p-6 border-b border-[#0f1525]">
+                    <h3 className="text-sm font-bold">Registered Gym Members</h3>
+                  </div>
+                  <table className="w-full text-left border-collapse text-xs">
+                    <thead>
+                      <tr className="border-b border-[#0f1525] text-textGrey font-semibold uppercase tracking-wider">
+                        <th className="px-6 py-4">User ID</th>
+                        <th className="px-6 py-4">Email</th>
+                        <th className="px-6 py-4">Account Role</th>
+                        <th className="px-6 py-4">Status</th>
+                        <th className="px-6 py-4">Action</th>
                       </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                    </thead>
+                    <tbody className="divide-y divide-[#0f1525] font-medium text-white">
+                      {paginatedUsers.map(user => (
+                        <tr key={user.id} className="hover:bg-[#111624]/30 transition-all">
+                          <td className="px-6 py-4 font-mono text-[10px] text-textGrey">{user.id}</td>
+                          <td className="px-6 py-4 font-bold">{user.email}</td>
+                          <td className="px-6 py-4">{user.role}</td>
+                          <td className="px-6 py-4">
+                            <span className={`px-2 py-1 rounded text-[10px] font-bold ${
+                              user.suspended 
+                                ? 'bg-red-500/10 text-red-400 border border-red-500/20' 
+                                : 'bg-neonGreen/10 text-neonGreen border border-neonGreen/20'
+                            }`}>
+                              {user.suspended ? 'Suspended' : 'Active'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            {user.role === 'ADMIN' ? (
+                              <span className="text-[10px] text-textGrey italic">Protected</span>
+                            ) : (
+                              <button
+                                onClick={() => handleToggleSuspend(user.id, user.suspended)}
+                                className={`px-3 py-1.5 rounded font-bold text-[10px] transition-all ${
+                                  user.suspended 
+                                    ? 'bg-[#111b15] text-neonGreen hover:bg-neonGreen hover:text-black border border-neonGreen/30' 
+                                    : 'bg-red-950/40 text-red-400 hover:bg-red-500 hover:text-white border border-red-500/20'
+                                }`}
+                              >
+                                {user.suspended ? 'Activate' : 'Suspend'}
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+                  <div className="p-4 border-t border-[#0f1525] flex items-center justify-between text-xs text-textGrey bg-[#090d16]/80">
+                    <span>Showing {filteredUsers.length > 0 ? (userPage * ITEMS_PER_PAGE + 1) : 0}-{Math.min((userPage + 1) * ITEMS_PER_PAGE, filteredUsers.length)} of {filteredUsers.length} users</span>
+                    <div className="flex gap-2">
+                      <button 
+                        disabled={userPage === 0} 
+                        onClick={() => setUserPage(userPage - 1)}
+                        className="px-3 py-1.5 rounded bg-[#111624] border border-[#1d273d] text-white hover:border-neonGreen/45 disabled:opacity-40 disabled:hover:border-[#1d273d] transition-all"
+                      >
+                        Previous
+                      </button>
+                      <span className="flex items-center px-2">Page {userPage + 1} of {totalUserPages}</span>
+                      <button 
+                        disabled={userPage >= totalUserPages - 1} 
+                        onClick={() => setUserPage(userPage + 1)}
+                        className="px-3 py-1.5 rounded bg-[#111624] border border-[#1d273d] text-white hover:border-neonGreen/45 disabled:opacity-40 disabled:hover:border-[#1d273d] transition-all"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()
           )}
         </main>
       </div>

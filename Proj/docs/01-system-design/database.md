@@ -8,7 +8,7 @@
 ## 2. Data Models & Entities
 
 ### 2.1. Identity & Profile (`User` Model)
-- Stores authentication data (Email, Password Hash, Google ID).
+- Stores authentication data (Email, Password Hash).
 - Manages biological metrics: `currentWeight`, `height`, `gender`, and `dateOfBirth`.
 - Tracks computed caloric targets: `targetCalories`, `targetProtein`, `targetCarbs`, and `targetFat`.
 

@@ -9,7 +9,7 @@ Develop the administrative tools and analytics APIs to monitor system health and
 - **US21:** Implement endpoints for admins to suspend violating user accounts.
 
 ## 3. Technical Implementation Details
-- Ensure strict adherence to `docs/05-skills/backend.md`.
+- Ensure strict adherence to `skills/backend.md`.
 - All APIs in this phase must be protected by an `AdminRole` middleware.
 - Aggregation queries should be optimized using Prisma's `groupBy` functions.
 

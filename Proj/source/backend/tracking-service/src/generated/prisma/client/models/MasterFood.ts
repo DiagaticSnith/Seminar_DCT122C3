@@ -50,6 +50,7 @@ export type MasterFoodMinAggregateOutputType = {
   baseProtein: number | null
   baseCarbs: number | null
   baseFat: number | null
+  status: $Enums.FoodStatus | null
 }
 
 export type MasterFoodMaxAggregateOutputType = {
@@ -60,6 +61,7 @@ export type MasterFoodMaxAggregateOutputType = {
   baseProtein: number | null
   baseCarbs: number | null
   baseFat: number | null
+  status: $Enums.FoodStatus | null
 }
 
 export type MasterFoodCountAggregateOutputType = {
@@ -70,6 +72,7 @@ export type MasterFoodCountAggregateOutputType = {
   baseProtein: number
   baseCarbs: number
   baseFat: number
+  status: number
   _all: number
 }
 
@@ -98,6 +101,7 @@ export type MasterFoodMinAggregateInputType = {
   baseProtein?: true
   baseCarbs?: true
   baseFat?: true
+  status?: true
 }
 
 export type MasterFoodMaxAggregateInputType = {
@@ -108,6 +112,7 @@ export type MasterFoodMaxAggregateInputType = {
   baseProtein?: true
   baseCarbs?: true
   baseFat?: true
+  status?: true
 }
 
 export type MasterFoodCountAggregateInputType = {
@@ -118,6 +123,7 @@ export type MasterFoodCountAggregateInputType = {
   baseProtein?: true
   baseCarbs?: true
   baseFat?: true
+  status?: true
   _all?: true
 }
 
@@ -215,6 +221,7 @@ export type MasterFoodGroupByOutputType = {
   baseProtein: number
   baseCarbs: number
   baseFat: number
+  status: $Enums.FoodStatus
   _count: MasterFoodCountAggregateOutputType | null
   _avg: MasterFoodAvgAggregateOutputType | null
   _sum: MasterFoodSumAggregateOutputType | null
@@ -248,6 +255,7 @@ export type MasterFoodWhereInput = {
   baseProtein?: Prisma.FloatFilter<"MasterFood"> | number
   baseCarbs?: Prisma.FloatFilter<"MasterFood"> | number
   baseFat?: Prisma.FloatFilter<"MasterFood"> | number
+  status?: Prisma.EnumFoodStatusFilter<"MasterFood"> | $Enums.FoodStatus
   logs?: Prisma.FoodLogListRelationFilter
 }
 
@@ -259,6 +267,7 @@ export type MasterFoodOrderByWithRelationInput = {
   baseProtein?: Prisma.SortOrder
   baseCarbs?: Prisma.SortOrder
   baseFat?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   logs?: Prisma.FoodLogOrderByRelationAggregateInput
 }
 
@@ -273,6 +282,7 @@ export type MasterFoodWhereUniqueInput = Prisma.AtLeast<{
   baseProtein?: Prisma.FloatFilter<"MasterFood"> | number
   baseCarbs?: Prisma.FloatFilter<"MasterFood"> | number
   baseFat?: Prisma.FloatFilter<"MasterFood"> | number
+  status?: Prisma.EnumFoodStatusFilter<"MasterFood"> | $Enums.FoodStatus
   logs?: Prisma.FoodLogListRelationFilter
 }, "id">
 
@@ -284,6 +294,7 @@ export type MasterFoodOrderByWithAggregationInput = {
   baseProtein?: Prisma.SortOrder
   baseCarbs?: Prisma.SortOrder
   baseFat?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   _count?: Prisma.MasterFoodCountOrderByAggregateInput
   _avg?: Prisma.MasterFoodAvgOrderByAggregateInput
   _max?: Prisma.MasterFoodMaxOrderByAggregateInput
@@ -302,6 +313,7 @@ export type MasterFoodScalarWhereWithAggregatesInput = {
   baseProtein?: Prisma.FloatWithAggregatesFilter<"MasterFood"> | number
   baseCarbs?: Prisma.FloatWithAggregatesFilter<"MasterFood"> | number
   baseFat?: Prisma.FloatWithAggregatesFilter<"MasterFood"> | number
+  status?: Prisma.EnumFoodStatusWithAggregatesFilter<"MasterFood"> | $Enums.FoodStatus
 }
 
 export type MasterFoodCreateInput = {
@@ -312,6 +324,7 @@ export type MasterFoodCreateInput = {
   baseProtein: number
   baseCarbs: number
   baseFat: number
+  status?: $Enums.FoodStatus
   logs?: Prisma.FoodLogCreateNestedManyWithoutFoodInput
 }
 
@@ -323,6 +336,7 @@ export type MasterFoodUncheckedCreateInput = {
   baseProtein: number
   baseCarbs: number
   baseFat: number
+  status?: $Enums.FoodStatus
   logs?: Prisma.FoodLogUncheckedCreateNestedManyWithoutFoodInput
 }
 
@@ -334,6 +348,7 @@ export type MasterFoodUpdateInput = {
   baseProtein?: Prisma.FloatFieldUpdateOperationsInput | number
   baseCarbs?: Prisma.FloatFieldUpdateOperationsInput | number
   baseFat?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumFoodStatusFieldUpdateOperationsInput | $Enums.FoodStatus
   logs?: Prisma.FoodLogUpdateManyWithoutFoodNestedInput
 }
 
@@ -345,6 +360,7 @@ export type MasterFoodUncheckedUpdateInput = {
   baseProtein?: Prisma.FloatFieldUpdateOperationsInput | number
   baseCarbs?: Prisma.FloatFieldUpdateOperationsInput | number
   baseFat?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumFoodStatusFieldUpdateOperationsInput | $Enums.FoodStatus
   logs?: Prisma.FoodLogUncheckedUpdateManyWithoutFoodNestedInput
 }
 
@@ -356,6 +372,7 @@ export type MasterFoodCreateManyInput = {
   baseProtein: number
   baseCarbs: number
   baseFat: number
+  status?: $Enums.FoodStatus
 }
 
 export type MasterFoodUpdateManyMutationInput = {
@@ -366,6 +383,7 @@ export type MasterFoodUpdateManyMutationInput = {
   baseProtein?: Prisma.FloatFieldUpdateOperationsInput | number
   baseCarbs?: Prisma.FloatFieldUpdateOperationsInput | number
   baseFat?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumFoodStatusFieldUpdateOperationsInput | $Enums.FoodStatus
 }
 
 export type MasterFoodUncheckedUpdateManyInput = {
@@ -376,6 +394,7 @@ export type MasterFoodUncheckedUpdateManyInput = {
   baseProtein?: Prisma.FloatFieldUpdateOperationsInput | number
   baseCarbs?: Prisma.FloatFieldUpdateOperationsInput | number
   baseFat?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumFoodStatusFieldUpdateOperationsInput | $Enums.FoodStatus
 }
 
 export type MasterFoodCountOrderByAggregateInput = {
@@ -386,6 +405,7 @@ export type MasterFoodCountOrderByAggregateInput = {
   baseProtein?: Prisma.SortOrder
   baseCarbs?: Prisma.SortOrder
   baseFat?: Prisma.SortOrder
+  status?: Prisma.SortOrder
 }
 
 export type MasterFoodAvgOrderByAggregateInput = {
@@ -404,6 +424,7 @@ export type MasterFoodMaxOrderByAggregateInput = {
   baseProtein?: Prisma.SortOrder
   baseCarbs?: Prisma.SortOrder
   baseFat?: Prisma.SortOrder
+  status?: Prisma.SortOrder
 }
 
 export type MasterFoodMinOrderByAggregateInput = {
@@ -414,6 +435,7 @@ export type MasterFoodMinOrderByAggregateInput = {
   baseProtein?: Prisma.SortOrder
   baseCarbs?: Prisma.SortOrder
   baseFat?: Prisma.SortOrder
+  status?: Prisma.SortOrder
 }
 
 export type MasterFoodSumOrderByAggregateInput = {
@@ -424,9 +446,9 @@ export type MasterFoodSumOrderByAggregateInput = {
   baseFat?: Prisma.SortOrder
 }
 
-export type MasterFoodScalarRelationFilter = {
-  is?: Prisma.MasterFoodWhereInput
-  isNot?: Prisma.MasterFoodWhereInput
+export type MasterFoodNullableScalarRelationFilter = {
+  is?: Prisma.MasterFoodWhereInput | null
+  isNot?: Prisma.MasterFoodWhereInput | null
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -441,16 +463,22 @@ export type FloatFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type EnumFoodStatusFieldUpdateOperationsInput = {
+  set?: $Enums.FoodStatus
+}
+
 export type MasterFoodCreateNestedOneWithoutLogsInput = {
   create?: Prisma.XOR<Prisma.MasterFoodCreateWithoutLogsInput, Prisma.MasterFoodUncheckedCreateWithoutLogsInput>
   connectOrCreate?: Prisma.MasterFoodCreateOrConnectWithoutLogsInput
   connect?: Prisma.MasterFoodWhereUniqueInput
 }
 
-export type MasterFoodUpdateOneRequiredWithoutLogsNestedInput = {
+export type MasterFoodUpdateOneWithoutLogsNestedInput = {
   create?: Prisma.XOR<Prisma.MasterFoodCreateWithoutLogsInput, Prisma.MasterFoodUncheckedCreateWithoutLogsInput>
   connectOrCreate?: Prisma.MasterFoodCreateOrConnectWithoutLogsInput
   upsert?: Prisma.MasterFoodUpsertWithoutLogsInput
+  disconnect?: Prisma.MasterFoodWhereInput | boolean
+  delete?: Prisma.MasterFoodWhereInput | boolean
   connect?: Prisma.MasterFoodWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.MasterFoodUpdateToOneWithWhereWithoutLogsInput, Prisma.MasterFoodUpdateWithoutLogsInput>, Prisma.MasterFoodUncheckedUpdateWithoutLogsInput>
 }
@@ -463,6 +491,7 @@ export type MasterFoodCreateWithoutLogsInput = {
   baseProtein: number
   baseCarbs: number
   baseFat: number
+  status?: $Enums.FoodStatus
 }
 
 export type MasterFoodUncheckedCreateWithoutLogsInput = {
@@ -473,6 +502,7 @@ export type MasterFoodUncheckedCreateWithoutLogsInput = {
   baseProtein: number
   baseCarbs: number
   baseFat: number
+  status?: $Enums.FoodStatus
 }
 
 export type MasterFoodCreateOrConnectWithoutLogsInput = {
@@ -499,6 +529,7 @@ export type MasterFoodUpdateWithoutLogsInput = {
   baseProtein?: Prisma.FloatFieldUpdateOperationsInput | number
   baseCarbs?: Prisma.FloatFieldUpdateOperationsInput | number
   baseFat?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumFoodStatusFieldUpdateOperationsInput | $Enums.FoodStatus
 }
 
 export type MasterFoodUncheckedUpdateWithoutLogsInput = {
@@ -509,6 +540,7 @@ export type MasterFoodUncheckedUpdateWithoutLogsInput = {
   baseProtein?: Prisma.FloatFieldUpdateOperationsInput | number
   baseCarbs?: Prisma.FloatFieldUpdateOperationsInput | number
   baseFat?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumFoodStatusFieldUpdateOperationsInput | $Enums.FoodStatus
 }
 
 
@@ -550,6 +582,7 @@ export type MasterFoodSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   baseProtein?: boolean
   baseCarbs?: boolean
   baseFat?: boolean
+  status?: boolean
   logs?: boolean | Prisma.MasterFood$logsArgs<ExtArgs>
   _count?: boolean | Prisma.MasterFoodCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["masterFood"]>
@@ -562,6 +595,7 @@ export type MasterFoodSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   baseProtein?: boolean
   baseCarbs?: boolean
   baseFat?: boolean
+  status?: boolean
 }, ExtArgs["result"]["masterFood"]>
 
 export type MasterFoodSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -572,6 +606,7 @@ export type MasterFoodSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   baseProtein?: boolean
   baseCarbs?: boolean
   baseFat?: boolean
+  status?: boolean
 }, ExtArgs["result"]["masterFood"]>
 
 export type MasterFoodSelectScalar = {
@@ -582,9 +617,10 @@ export type MasterFoodSelectScalar = {
   baseProtein?: boolean
   baseCarbs?: boolean
   baseFat?: boolean
+  status?: boolean
 }
 
-export type MasterFoodOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "baseServingSize" | "baseCalories" | "baseProtein" | "baseCarbs" | "baseFat", ExtArgs["result"]["masterFood"]>
+export type MasterFoodOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "baseServingSize" | "baseCalories" | "baseProtein" | "baseCarbs" | "baseFat" | "status", ExtArgs["result"]["masterFood"]>
 export type MasterFoodInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   logs?: boolean | Prisma.MasterFood$logsArgs<ExtArgs>
   _count?: boolean | Prisma.MasterFoodCountOutputTypeDefaultArgs<ExtArgs>
@@ -605,6 +641,7 @@ export type $MasterFoodPayload<ExtArgs extends runtime.Types.Extensions.Internal
     baseProtein: number
     baseCarbs: number
     baseFat: number
+    status: $Enums.FoodStatus
   }, ExtArgs["result"]["masterFood"]>
   composites: {}
 }
@@ -1036,6 +1073,7 @@ export interface MasterFoodFieldRefs {
   readonly baseProtein: Prisma.FieldRef<"MasterFood", 'Float'>
   readonly baseCarbs: Prisma.FieldRef<"MasterFood", 'Float'>
   readonly baseFat: Prisma.FieldRef<"MasterFood", 'Float'>
+  readonly status: Prisma.FieldRef<"MasterFood", 'FoodStatus'>
 }
     
 

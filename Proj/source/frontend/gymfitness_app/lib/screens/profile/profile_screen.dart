@@ -70,13 +70,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       final success = await provider.updateMetrics(data);
       if (success && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Profile updated successfully! ✅'),
-            backgroundColor: AppColors.neonGreen,
-            action: SnackBarAction(label: 'OK', textColor: Colors.black, onPressed: () {}),
-          ),
-        );
+        if (provider.warning == 'overtraining_prevented') {
+          await showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                backgroundColor: AppColors.buttonBackground,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  side: const BorderSide(color: AppColors.darkGreenBorder),
+                ),
+                title: const Text('⚠️ Physical Guardrail', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                content: const Text(
+                  'The training system has been updated. To avoid muscle overload, the new training schedule will begin tomorrow!',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('OK', style: TextStyle(color: AppColors.neonGreen, fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              );
+            },
+          );
+          provider.clearWarning();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('Profile updated successfully! ✅'),
+              backgroundColor: AppColors.neonGreen,
+              action: SnackBarAction(label: 'OK', textColor: Colors.black, onPressed: () {}),
+            ),
+          );
+        }
+
+        // Keep Dashboard/Home synchronized
+        final newStyle = provider.profileData?['workoutStyle'] ?? 'None';
+        await Provider.of<TrackingProvider>(context, listen: false).fetchSchedule(newStyle);
       }
     } catch (e) {
       if (!mounted) return;

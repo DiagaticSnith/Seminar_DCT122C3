@@ -11,13 +11,22 @@ class ProfileProvider with ChangeNotifier {
   Map<String, dynamic>? _profileData;
   Map<String, dynamic>? get profileData => _profileData;
 
+  String? _warning;
+  String? get warning => _warning;
+
   String get _userServiceUrl {
-    if (kIsWeb) return 'http://127.0.0.1:3001';
+    if (kIsWeb) return 'http://localhost:3001';
     return 'http://10.0.2.2:3001';
   }
 
   void clearState() {
     _profileData = null;
+    _warning = null;
+    notifyListeners();
+  }
+
+  void clearWarning() {
+    _warning = null;
     notifyListeners();
   }
 
@@ -66,7 +75,14 @@ class ProfileProvider with ChangeNotifier {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        _profileData = jsonDecode(response.body);
+        final decoded = jsonDecode(response.body);
+        if (decoded is Map<String, dynamic> && decoded.containsKey('success') && decoded.containsKey('data')) {
+          _profileData = decoded['data'];
+          _warning = decoded['warning'];
+        } else {
+          _profileData = decoded;
+          _warning = null;
+        }
         _isLoading = false;
         notifyListeners();
         return true;

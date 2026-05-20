@@ -824,7 +824,8 @@ export const MasterFoodScalarFieldEnum = {
   baseCalories: 'baseCalories',
   baseProtein: 'baseProtein',
   baseCarbs: 'baseCarbs',
-  baseFat: 'baseFat'
+  baseFat: 'baseFat',
+  status: 'status'
 } as const
 
 export type MasterFoodScalarFieldEnum = (typeof MasterFoodScalarFieldEnum)[keyof typeof MasterFoodScalarFieldEnum]
@@ -859,6 +860,7 @@ export const FoodLogScalarFieldEnum = {
   id: 'id',
   dailyLogId: 'dailyLogId',
   foodId: 'foodId',
+  foodName: 'foodName',
   grams: 'grams',
   calories: 'calories',
   protein: 'protein',
@@ -936,6 +938,20 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'FoodStatus'
+ */
+export type EnumFoodStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FoodStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'FoodStatus[]'
+ */
+export type ListEnumFoodStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FoodStatus[]'>
     
 
 

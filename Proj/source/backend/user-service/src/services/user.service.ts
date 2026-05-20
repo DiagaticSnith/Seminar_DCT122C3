@@ -8,7 +8,7 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 export class UserService {
-  async updateMetrics(userId: string, data: any) {
+  async updateMetrics(userId: string, data: any, token?: string) {
     const { height, weight, age, gender, activityLevel, workoutStyle, goal, diet } = data;
 
     // Calculate BMR (Mifflin-St Jeor)
@@ -90,6 +90,53 @@ export class UserService {
     // Notify AI Coach if workout style changes (Mock for now)
     console.log(`[Event Trigger] Workout Style updated for user ${userId}. Notifying ai-coach-service...`);
 
+    const existingProfile = await prisma.userProfile.findUnique({ where: { userId } });
+    const oldWorkoutStyle = existingProfile?.workoutStyle;
+    let isScenarioB = false;
+
+    if (oldWorkoutStyle !== undefined && oldWorkoutStyle !== workoutStyle && token) {
+      try {
+        const trackingUrl = process.env.TRACKING_SERVICE_URL || 'http://gymfitness-tracking:3002';
+        const response = await fetch(`${trackingUrl}/tracking/schedule?workoutStyle=${encodeURIComponent(oldWorkoutStyle)}`, {
+          headers: {
+            'Authorization': token
+          }
+        });
+        if (response.ok) {
+          const scheduleData: any = await response.json();
+          if (scheduleData && scheduleData.schedule && scheduleData.schedule.length > 0) {
+            const completedCount = scheduleData.schedule.filter((ex: any) => ex.completed).length;
+            const progress = completedCount / scheduleData.schedule.length;
+            if (progress >= 0.5) {
+              isScenarioB = true;
+            } else {
+              // Scenario A: Progress < 50%. Delete/invalidate pending exercises, regenerate today's schedule.
+              await fetch(`${trackingUrl}/tracking/workout/regenerate`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': token
+                },
+                body: JSON.stringify({ workoutStyle })
+              });
+            }
+          } else {
+            // No schedule or 0 exercises. Scenario A: Regenerate.
+            await fetch(`${trackingUrl}/tracking/workout/regenerate`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+              },
+              body: JSON.stringify({ workoutStyle })
+            });
+          }
+        }
+      } catch (err) {
+        console.error("Failed to query schedule or regenerate in updateMetrics:", err);
+      }
+    }
+
     const profile = await prisma.userProfile.upsert({
       where: { userId },
       update: {
@@ -101,6 +148,13 @@ export class UserService {
         targetCalories, targetProtein, targetCarbs, targetFat
       }
     });
+
+    if (isScenarioB) {
+      return {
+        ...profile,
+        warning: 'overtraining_prevented'
+      };
+    }
 
     return profile;
   }

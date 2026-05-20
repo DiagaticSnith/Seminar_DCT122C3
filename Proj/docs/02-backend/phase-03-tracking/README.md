@@ -1,7 +1,7 @@
 # Backend Phase 03: Master Data & Daily Tracking
 
 ## 1. Objective
-Develop the `workout-service` to manage Admin-defined dictionaries and handle the user's daily check-ins and logs.
+Develop the `tracking-service` to manage Admin-defined dictionaries and handle the user's daily check-ins and logs.
 
 ## 2. Requirements Mapping
 - **Admin Management:** US15 (Food CRUD) and US16 (Exercise CRUD with Tags/Videos).

@@ -20,7 +20,24 @@ class _ChatScreenState extends State<ChatScreen> {
   final Set<String> _loggedFoodMessageIds = {};
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final chatProvider = context.read<ChatProvider>();
+      final profileProvider = context.read<ProfileProvider>();
+      final trackingProvider = context.read<TrackingProvider>();
+
+      chatProvider.onScheduleUpdated = (workoutStyle) {
+        final style = profileProvider.profileData?['workoutStyle'] ?? workoutStyle;
+        trackingProvider.fetchSchedule(style);
+      };
+    });
+  }
+
+  @override
   void dispose() {
+    // Unregister the callback to avoid memory leaks
+    context.read<ChatProvider>().onScheduleUpdated = null;
     _textController.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -49,7 +66,7 @@ class _ChatScreenState extends State<ChatScreen> {
     final foodLogs = dailyLog['foodLogs'] as List<dynamic>? ?? [];
 
     final foodsList = foodLogs.map((log) {
-      final foodName = log['food']?['name'] ?? 'Unknown Food';
+      final foodName = log['foodName'] ?? log['food']?['name'] ?? 'Unknown Food';
       final grams = log['grams'] ?? 0;
       return '$foodName (${grams}g)';
     }).join(', ');
@@ -186,6 +203,9 @@ class _ChatScreenState extends State<ChatScreen> {
     }
     if (message.type == MessageType.exerciseSwap) {
       return _buildExerciseSwapCard(message, time);
+    }
+    if (message.type == MessageType.scheduleUpdated) {
+      return _buildScheduleUpdatedCard(message, time);
     }
 
     return Padding(
@@ -342,28 +362,25 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildAddToDiaryButton(ChatMessage message, Map<String, dynamic> data) {
-    final isAdded = _loggedFoodMessageIds.contains(message.id);
-
     return ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
-        backgroundColor: isAdded ? Colors.grey[800] : AppColors.neonGreen,
-        foregroundColor: isAdded ? AppColors.textGrey : Colors.black,
+        backgroundColor: AppColors.neonGreen,
+        foregroundColor: Colors.black,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         minimumSize: const Size(double.infinity, 40),
       ),
-      icon: Icon(isAdded ? Icons.check : Icons.add_circle_outline, size: 18),
-      label: Text(
-        isAdded ? 'Added' : 'Add to Diary',
-        style: const TextStyle(fontWeight: FontWeight.bold),
+      icon: const Icon(Icons.add_circle_outline, size: 18),
+      label: const Text(
+        'Add to Diary',
+        style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      onPressed: isAdded
-          ? null
-          : () async {
+      onPressed: () async {
               final profileProvider = context.read<ProfileProvider>();
               final trackingProvider = context.read<TrackingProvider>();
               final workoutStyle = profileProvider.profileData?['workoutStyle'] ?? 'Bodybuilding';
 
               final name = data['foodName'] ?? 'Food Estimate';
+              final double? grams = data['grams'] != null ? (data['grams'] as num).toDouble() : null;
               final double kcal = (data['estimatedCalories'] ?? 0).toDouble();
               final double p = (data['estimatedProtein'] ?? 0).toDouble();
               final double c = (data['estimatedCarbs'] ?? 0).toDouble();
@@ -371,6 +388,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
               final success = await trackingProvider.logCustomFood(
                 name: name,
+                grams: grams,
                 calories: kcal,
                 protein: p,
                 carbs: c,
@@ -453,14 +471,16 @@ class _ChatScreenState extends State<ChatScreen> {
             const SizedBox(height: 12),
             Text(data['reason'] ?? message.content, style: const TextStyle(color: Colors.white, fontSize: 13, height: 1.45)),
             const SizedBox(height: 14),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.neonGreen,
-                foregroundColor: Colors.black,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                minimumSize: const Size(double.infinity, 42),
-              ),
-              onPressed: () async {
+            Builder(builder: (context) {
+              final isApplied = _loggedFoodMessageIds.contains(message.id);
+              return ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isApplied ? Colors.grey[800] : AppColors.neonGreen,
+                  foregroundColor: isApplied ? AppColors.textGrey : Colors.black,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  minimumSize: const Size(double.infinity, 42),
+                ),
+                onPressed: isApplied ? null : () async {
                 final trackingProvider = context.read<TrackingProvider>();
                 final profileProvider = context.read<ProfileProvider>();
                 final style = profileProvider.profileData?['workoutStyle'] ?? 'Bodybuilding';
@@ -471,17 +491,121 @@ class _ChatScreenState extends State<ChatScreen> {
                   style,
                 );
 
-                if (success && mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Workout schedule updated successfully! 🔄✅'),
-                      backgroundColor: AppColors.neonGreen,
-                      duration: Duration(seconds: 3),
-                    ),
-                  );
+                if (success) {
+                  setState(() {
+                    _loggedFoodMessageIds.add(message.id);
+                  });
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Workout schedule updated successfully! 🔄✅'),
+                        backgroundColor: AppColors.neonGreen,
+                        duration: Duration(seconds: 3),
+                      ),
+                    );
+                  }
                 }
               },
-              child: const Text('Apply Swap to Schedule', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+              child: Text(isApplied ? 'Applied' : 'Apply Swap to Schedule', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+            );
+            }),
+            const SizedBox(height: 8),
+            Text(time, style: const TextStyle(color: AppColors.textGrey, fontSize: 11)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildScheduleUpdatedCard(ChatMessage message, String time) {
+    final data = message.extraData ?? {};
+    final routines = data['routines'] as List<dynamic>? ?? [];
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Container(
+        margin: const EdgeInsets.only(right: 40),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.inputBackground,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFF00E5FF)),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF00E5FF).withOpacity(0.15),
+              blurRadius: 12,
+              spreadRadius: 1,
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Row(
+              children: [
+                Text('📋', style: TextStyle(fontSize: 24)),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Schedule Updated!',
+                    style: TextStyle(color: Color(0xFF00E5FF), fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                ),
+                Icon(Icons.check_circle, color: Color(0xFF00E5FF), size: 20),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              message.content,
+              style: const TextStyle(color: Colors.white, fontSize: 14, height: 1.4),
+            ),
+            if (routines.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              const Divider(color: Color(0xFF1E2D1E)),
+              const SizedBox(height: 8),
+              ...routines.take(6).map((r) {
+                final name = r['exerciseName'] ?? 'Exercise';
+                final sets = r['sets'] ?? 4;
+                final reps = r['reps'] ?? 12;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 3),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.fitness_center, color: Color(0xFF00E5FF), size: 14),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          name,
+                          style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Text(
+                        '$sets×$reps',
+                        style: TextStyle(color: Colors.grey.shade400, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ],
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF00E5FF).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFF00E5FF).withOpacity(0.3)),
+              ),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.refresh, color: Color(0xFF00E5FF), size: 14),
+                  SizedBox(width: 6),
+                  Text(
+                    'Home screen updated automatically',
+                    style: TextStyle(color: Color(0xFF00E5FF), fontSize: 12),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 8),
             Text(time, style: const TextStyle(color: AppColors.textGrey, fontSize: 11)),

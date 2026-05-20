@@ -8,8 +8,23 @@ export class UserController {
   async updateMetrics(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const userId = req.user.userId;
-      const profile = await userService.updateMetrics(userId, req.body);
-      res.json(profile);
+      const token = req.headers.authorization;
+      const profile = await userService.updateMetrics(userId, req.body, token);
+
+      if (profile && (profile as any).warning === 'overtraining_prevented') {
+        const warning = (profile as any).warning;
+        const profileData = { ...profile };
+        delete (profileData as any).warning;
+
+        res.json({
+          success: true,
+          data: profileData,
+          message: "Profile updated",
+          warning
+        });
+      } else {
+        res.json(profile);
+      }
     } catch (error) {
       next(error);
     }

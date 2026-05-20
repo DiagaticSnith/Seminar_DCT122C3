@@ -25,6 +25,23 @@ export type MasterFood = $Result.DefaultSelection<Prisma.$MasterFoodPayload>
 export type MasterExercise = $Result.DefaultSelection<Prisma.$MasterExercisePayload>
 
 /**
+ * Enums
+ */
+export namespace $Enums {
+  export const FoodStatus: {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED'
+};
+
+export type FoodStatus = (typeof FoodStatus)[keyof typeof FoodStatus]
+
+}
+
+export type FoodStatus = $Enums.FoodStatus
+
+export const FoodStatus: typeof $Enums.FoodStatus
+
+/**
  * ##  Prisma Client ʲˢ
  *
  * Type-safe database client for TypeScript & Node.js
@@ -993,6 +1010,7 @@ export namespace Prisma {
     baseProtein: number | null
     baseCarbs: number | null
     baseFat: number | null
+    status: $Enums.FoodStatus | null
   }
 
   export type MasterFoodMaxAggregateOutputType = {
@@ -1003,6 +1021,7 @@ export namespace Prisma {
     baseProtein: number | null
     baseCarbs: number | null
     baseFat: number | null
+    status: $Enums.FoodStatus | null
   }
 
   export type MasterFoodCountAggregateOutputType = {
@@ -1013,6 +1032,7 @@ export namespace Prisma {
     baseProtein: number
     baseCarbs: number
     baseFat: number
+    status: number
     _all: number
   }
 
@@ -1041,6 +1061,7 @@ export namespace Prisma {
     baseProtein?: true
     baseCarbs?: true
     baseFat?: true
+    status?: true
   }
 
   export type MasterFoodMaxAggregateInputType = {
@@ -1051,6 +1072,7 @@ export namespace Prisma {
     baseProtein?: true
     baseCarbs?: true
     baseFat?: true
+    status?: true
   }
 
   export type MasterFoodCountAggregateInputType = {
@@ -1061,6 +1083,7 @@ export namespace Prisma {
     baseProtein?: true
     baseCarbs?: true
     baseFat?: true
+    status?: true
     _all?: true
   }
 
@@ -1158,6 +1181,7 @@ export namespace Prisma {
     baseProtein: number
     baseCarbs: number
     baseFat: number
+    status: $Enums.FoodStatus
     _count: MasterFoodCountAggregateOutputType | null
     _avg: MasterFoodAvgAggregateOutputType | null
     _sum: MasterFoodSumAggregateOutputType | null
@@ -1187,6 +1211,7 @@ export namespace Prisma {
     baseProtein?: boolean
     baseCarbs?: boolean
     baseFat?: boolean
+    status?: boolean
   }, ExtArgs["result"]["masterFood"]>
 
   export type MasterFoodSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1197,6 +1222,7 @@ export namespace Prisma {
     baseProtein?: boolean
     baseCarbs?: boolean
     baseFat?: boolean
+    status?: boolean
   }, ExtArgs["result"]["masterFood"]>
 
   export type MasterFoodSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1207,6 +1233,7 @@ export namespace Prisma {
     baseProtein?: boolean
     baseCarbs?: boolean
     baseFat?: boolean
+    status?: boolean
   }, ExtArgs["result"]["masterFood"]>
 
   export type MasterFoodSelectScalar = {
@@ -1217,9 +1244,10 @@ export namespace Prisma {
     baseProtein?: boolean
     baseCarbs?: boolean
     baseFat?: boolean
+    status?: boolean
   }
 
-  export type MasterFoodOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "baseServingSize" | "baseCalories" | "baseProtein" | "baseCarbs" | "baseFat", ExtArgs["result"]["masterFood"]>
+  export type MasterFoodOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "baseServingSize" | "baseCalories" | "baseProtein" | "baseCarbs" | "baseFat" | "status", ExtArgs["result"]["masterFood"]>
 
   export type $MasterFoodPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "MasterFood"
@@ -1232,6 +1260,7 @@ export namespace Prisma {
       baseProtein: number
       baseCarbs: number
       baseFat: number
+      status: $Enums.FoodStatus
     }, ExtArgs["result"]["masterFood"]>
     composites: {}
   }
@@ -1662,6 +1691,7 @@ export namespace Prisma {
     readonly baseProtein: FieldRef<"MasterFood", 'Float'>
     readonly baseCarbs: FieldRef<"MasterFood", 'Float'>
     readonly baseFat: FieldRef<"MasterFood", 'Float'>
+    readonly status: FieldRef<"MasterFood", 'FoodStatus'>
   }
     
 
@@ -3050,7 +3080,8 @@ export namespace Prisma {
     baseCalories: 'baseCalories',
     baseProtein: 'baseProtein',
     baseCarbs: 'baseCarbs',
-    baseFat: 'baseFat'
+    baseFat: 'baseFat',
+    status: 'status'
   };
 
   export type MasterFoodScalarFieldEnum = (typeof MasterFoodScalarFieldEnum)[keyof typeof MasterFoodScalarFieldEnum]
@@ -3125,6 +3156,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'FoodStatus'
+   */
+  export type EnumFoodStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FoodStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'FoodStatus[]'
+   */
+  export type ListEnumFoodStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FoodStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -3152,6 +3197,7 @@ export namespace Prisma {
     baseProtein?: FloatFilter<"MasterFood"> | number
     baseCarbs?: FloatFilter<"MasterFood"> | number
     baseFat?: FloatFilter<"MasterFood"> | number
+    status?: EnumFoodStatusFilter<"MasterFood"> | $Enums.FoodStatus
   }
 
   export type MasterFoodOrderByWithRelationInput = {
@@ -3162,6 +3208,7 @@ export namespace Prisma {
     baseProtein?: SortOrder
     baseCarbs?: SortOrder
     baseFat?: SortOrder
+    status?: SortOrder
   }
 
   export type MasterFoodWhereUniqueInput = Prisma.AtLeast<{
@@ -3175,6 +3222,7 @@ export namespace Prisma {
     baseProtein?: FloatFilter<"MasterFood"> | number
     baseCarbs?: FloatFilter<"MasterFood"> | number
     baseFat?: FloatFilter<"MasterFood"> | number
+    status?: EnumFoodStatusFilter<"MasterFood"> | $Enums.FoodStatus
   }, "id">
 
   export type MasterFoodOrderByWithAggregationInput = {
@@ -3185,6 +3233,7 @@ export namespace Prisma {
     baseProtein?: SortOrder
     baseCarbs?: SortOrder
     baseFat?: SortOrder
+    status?: SortOrder
     _count?: MasterFoodCountOrderByAggregateInput
     _avg?: MasterFoodAvgOrderByAggregateInput
     _max?: MasterFoodMaxOrderByAggregateInput
@@ -3203,6 +3252,7 @@ export namespace Prisma {
     baseProtein?: FloatWithAggregatesFilter<"MasterFood"> | number
     baseCarbs?: FloatWithAggregatesFilter<"MasterFood"> | number
     baseFat?: FloatWithAggregatesFilter<"MasterFood"> | number
+    status?: EnumFoodStatusWithAggregatesFilter<"MasterFood"> | $Enums.FoodStatus
   }
 
   export type MasterExerciseWhereInput = {
@@ -3265,6 +3315,7 @@ export namespace Prisma {
     baseProtein: number
     baseCarbs: number
     baseFat: number
+    status?: $Enums.FoodStatus
   }
 
   export type MasterFoodUncheckedCreateInput = {
@@ -3275,6 +3326,7 @@ export namespace Prisma {
     baseProtein: number
     baseCarbs: number
     baseFat: number
+    status?: $Enums.FoodStatus
   }
 
   export type MasterFoodUpdateInput = {
@@ -3285,6 +3337,7 @@ export namespace Prisma {
     baseProtein?: FloatFieldUpdateOperationsInput | number
     baseCarbs?: FloatFieldUpdateOperationsInput | number
     baseFat?: FloatFieldUpdateOperationsInput | number
+    status?: EnumFoodStatusFieldUpdateOperationsInput | $Enums.FoodStatus
   }
 
   export type MasterFoodUncheckedUpdateInput = {
@@ -3295,6 +3348,7 @@ export namespace Prisma {
     baseProtein?: FloatFieldUpdateOperationsInput | number
     baseCarbs?: FloatFieldUpdateOperationsInput | number
     baseFat?: FloatFieldUpdateOperationsInput | number
+    status?: EnumFoodStatusFieldUpdateOperationsInput | $Enums.FoodStatus
   }
 
   export type MasterFoodCreateManyInput = {
@@ -3305,6 +3359,7 @@ export namespace Prisma {
     baseProtein: number
     baseCarbs: number
     baseFat: number
+    status?: $Enums.FoodStatus
   }
 
   export type MasterFoodUpdateManyMutationInput = {
@@ -3315,6 +3370,7 @@ export namespace Prisma {
     baseProtein?: FloatFieldUpdateOperationsInput | number
     baseCarbs?: FloatFieldUpdateOperationsInput | number
     baseFat?: FloatFieldUpdateOperationsInput | number
+    status?: EnumFoodStatusFieldUpdateOperationsInput | $Enums.FoodStatus
   }
 
   export type MasterFoodUncheckedUpdateManyInput = {
@@ -3325,6 +3381,7 @@ export namespace Prisma {
     baseProtein?: FloatFieldUpdateOperationsInput | number
     baseCarbs?: FloatFieldUpdateOperationsInput | number
     baseFat?: FloatFieldUpdateOperationsInput | number
+    status?: EnumFoodStatusFieldUpdateOperationsInput | $Enums.FoodStatus
   }
 
   export type MasterExerciseCreateInput = {
@@ -3409,6 +3466,13 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type EnumFoodStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.FoodStatus | EnumFoodStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FoodStatus[] | ListEnumFoodStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FoodStatus[] | ListEnumFoodStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFoodStatusFilter<$PrismaModel> | $Enums.FoodStatus
+  }
+
   export type MasterFoodCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -3417,6 +3481,7 @@ export namespace Prisma {
     baseProtein?: SortOrder
     baseCarbs?: SortOrder
     baseFat?: SortOrder
+    status?: SortOrder
   }
 
   export type MasterFoodAvgOrderByAggregateInput = {
@@ -3435,6 +3500,7 @@ export namespace Prisma {
     baseProtein?: SortOrder
     baseCarbs?: SortOrder
     baseFat?: SortOrder
+    status?: SortOrder
   }
 
   export type MasterFoodMinOrderByAggregateInput = {
@@ -3445,6 +3511,7 @@ export namespace Prisma {
     baseProtein?: SortOrder
     baseCarbs?: SortOrder
     baseFat?: SortOrder
+    status?: SortOrder
   }
 
   export type MasterFoodSumOrderByAggregateInput = {
@@ -3487,6 +3554,16 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type EnumFoodStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FoodStatus | EnumFoodStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FoodStatus[] | ListEnumFoodStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FoodStatus[] | ListEnumFoodStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFoodStatusWithAggregatesFilter<$PrismaModel> | $Enums.FoodStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFoodStatusFilter<$PrismaModel>
+    _max?: NestedEnumFoodStatusFilter<$PrismaModel>
   }
 
   export type StringNullableListFilter<$PrismaModel = never> = {
@@ -3569,6 +3646,10 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type EnumFoodStatusFieldUpdateOperationsInput = {
+    set?: $Enums.FoodStatus
+  }
+
   export type MasterExerciseCreatetagsInput = {
     set: string[]
   }
@@ -3605,6 +3686,13 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedEnumFoodStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.FoodStatus | EnumFoodStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FoodStatus[] | ListEnumFoodStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FoodStatus[] | ListEnumFoodStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFoodStatusFilter<$PrismaModel> | $Enums.FoodStatus
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -3649,6 +3737,16 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type NestedEnumFoodStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FoodStatus | EnumFoodStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FoodStatus[] | ListEnumFoodStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FoodStatus[] | ListEnumFoodStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFoodStatusWithAggregatesFilter<$PrismaModel> | $Enums.FoodStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFoodStatusFilter<$PrismaModel>
+    _max?: NestedEnumFoodStatusFilter<$PrismaModel>
   }
 
   export type NestedStringNullableFilter<$PrismaModel = never> = {

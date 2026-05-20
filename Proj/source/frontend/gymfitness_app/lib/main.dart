@@ -41,17 +41,54 @@ class GymFitnessApp extends StatelessWidget {
           bodyMedium: TextStyle(color: AppColors.textLight),
         ),
       ),
-      home: Consumer<AuthProvider>(
-        builder: (context, auth, _) {
-          if (auth.isAuthenticated) {
-            if (auth.isNewUser) {
-              return OnboardingScreen();
-            }
-            return const MainLayoutScreen();
-          }
-          return const LoginScreen();
-        },
-      ),
+      home: const AuthWrapper(),
     );
+  }
+}
+
+class AuthWrapper extends StatefulWidget {
+  const AuthWrapper({Key? key}) : super(key: key);
+
+  @override
+  State<AuthWrapper> createState() => _AuthWrapperState();
+}
+
+class _AuthWrapperState extends State<AuthWrapper> {
+  bool _checkedProfile = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final auth = context.watch<AuthProvider>();
+    final profileProvider = context.watch<ProfileProvider>();
+
+    if (!auth.isAuthenticated) {
+      _checkedProfile = false;
+      return const LoginScreen();
+    }
+
+    if (!_checkedProfile) {
+      Future.microtask(() async {
+        await profileProvider.fetchProfile();
+        if (mounted) {
+          setState(() {
+            _checkedProfile = true;
+          });
+        }
+      });
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(color: AppColors.neonGreen),
+        ),
+      );
+    }
+
+    final hasProfile = profileProvider.profileData != null &&
+        profileProvider.profileData!['height'] != null;
+
+    if (!hasProfile || auth.isNewUser) {
+      return OnboardingScreen();
+    }
+
+    return const MainLayoutScreen();
   }
 }

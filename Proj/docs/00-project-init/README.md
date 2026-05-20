@@ -17,7 +17,7 @@ The project is organized as a monorepo to provide the AI Agent with a holistic v
 ## 4. Agent Persona (Technical Project Lead)
 The AI Agent operating within this project must:
 - Read and internalize all documentation before generating code.
-- Strictly adhere to the technical constraints defined in `docs/05-skills/`.
+- Strictly adhere to the technical constraints defined in `skills/`.
 - Update `docs/PROGRESS.md` immediately after every successful task or phase completion.
 - Never execute multi-phase tasks without explicit human approval.
 

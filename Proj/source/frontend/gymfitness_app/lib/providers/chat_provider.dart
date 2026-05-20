@@ -4,7 +4,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum MessageSender { user, ai }
-enum MessageType { text, medicalRejection, foodEstimate, exerciseSwap }
+enum MessageType { text, medicalRejection, foodEstimate, exerciseSwap, scheduleUpdated }
 
 class ChatMessage {
   final String id;
@@ -28,7 +28,7 @@ class ChatMessage {
 
 class ChatProvider extends ChangeNotifier {
   static String get _socketUrl {
-    if (kIsWeb) return 'http://127.0.0.1:3003';
+    if (kIsWeb) return 'http://localhost:3003';
     return 'http://10.0.2.2:3003';
   }
 
@@ -37,6 +37,9 @@ class ChatProvider extends ChangeNotifier {
   bool _isConnected = false;
   bool _isTyping = false;
   String? _streamingMessageId;
+
+  /// Called when AI returns an updateSchedule intent so home screen can refresh
+  Function(String workoutStyle)? onScheduleUpdated;
 
   List<ChatMessage> get messages => List.unmodifiable(_messages);
   bool get isConnected => _isConnected;
@@ -68,6 +71,7 @@ class ChatProvider extends ChangeNotifier {
       IO.OptionBuilder()
           .setTransports(['websocket'])
           .setAuth({'token': token}) // Dynamically authenticate socket with token
+          .enableForceNew()
           .disableAutoConnect()
           .build(),
     );
@@ -123,17 +127,38 @@ class ChatProvider extends ChangeNotifier {
           } else if (intent == 'exercise_swap') {
             _messages[idx].type = MessageType.exerciseSwap;
             _messages[idx].extraData = Map<String, dynamic>.from(data);
+          } else if (intent == 'updateSchedule') {
+            _messages[idx].type = MessageType.scheduleUpdated;
+            _messages[idx].extraData = Map<String, dynamic>.from(data);
+            // Trigger home screen refresh
+            final workoutStyle = data['workoutStyle'] ?? 'Gym';
+            Future.microtask(() => onScheduleUpdated?.call(workoutStyle));
           }
         }
         _streamingMessageId = null;
       } else {
+        final MessageType msgType;
+        if (intent == 'medical_rejection') {
+          msgType = MessageType.medicalRejection;
+        } else if (intent == 'food_estimate') {
+          msgType = MessageType.foodEstimate;
+        } else if (intent == 'exercise_swap') {
+          msgType = MessageType.exerciseSwap;
+        } else if (intent == 'updateSchedule') {
+          msgType = MessageType.scheduleUpdated;
+          final workoutStyle = data['workoutStyle'] ?? 'Gym';
+          Future.microtask(() => onScheduleUpdated?.call(workoutStyle));
+        } else {
+          msgType = MessageType.text;
+        }
+
         _messages.add(ChatMessage(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           sender: MessageSender.ai,
           content: data['message'] ?? 'I cannot help with that.',
           timestamp: DateTime.now(),
-          type: intent == 'medical_rejection' ? MessageType.medicalRejection : MessageType.text,
-          extraData: intent == 'food_estimate' || intent == 'exercise_swap'
+          type: msgType,
+          extraData: intent == 'food_estimate' || intent == 'exercise_swap' || intent == 'updateSchedule'
               ? Map<String, dynamic>.from(data)
               : null,
         ));

@@ -7,14 +7,20 @@ datasource db {
   provider = "postgresql"
 }
 
+enum FoodStatus {
+  PENDING
+  APPROVED
+}
+
 model MasterFood {
-  id              String @id @default(uuid())
+  id              String     @id @default(uuid())
   name            String
   baseServingSize Float
   baseCalories    Float
   baseProtein     Float
   baseCarbs       Float
   baseFat         Float
+  status          FoodStatus @default(APPROVED)
 }
 
 model MasterExercise {

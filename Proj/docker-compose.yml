@@ -1,0 +1,133 @@
+version: '3.8'
+
+services:
+  postgres-db:
+    image: postgres:15
+    container_name: gymfitness-db
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123123
+      POSTGRES_DB: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./source/backend/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - gymfitness_net
+
+  identity-service:
+    build:
+      context: ./source/backend/identity-service
+      dockerfile: Dockerfile
+    container_name: gymfitness-identity
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgresql://postgres:123123@postgres-db:5432/gymfitness_auth?schema=public
+      JWT_SECRET: supersecretjwtkey12345
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    networks:
+      - gymfitness_net
+
+  user-service:
+    build:
+      context: ./source/backend/user-service
+      dockerfile: Dockerfile
+    container_name: gymfitness-user
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      DATABASE_URL: postgresql://postgres:123123@postgres-db:5432/gymfitness_user?schema=public
+      JWT_SECRET: supersecretjwtkey12345
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    networks:
+      - gymfitness_net
+
+  tracking-service:
+    build:
+      context: ./source/backend/tracking-service
+      dockerfile: Dockerfile
+    container_name: gymfitness-tracking
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      PORT: 3002
+      DATABASE_URL: postgresql://postgres:123123@postgres-db:5432/gymfitness_tracking?schema=public
+      JWT_SECRET: supersecretjwtkey12345
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    networks:
+      - gymfitness_net
+
+  ai-coach-service:
+    build:
+      context: ./source/backend/ai-coach-service
+      dockerfile: Dockerfile
+    container_name: gymfitness-aicoach
+    restart: unless-stopped
+    ports:
+      - "3003:3003"
+    environment:
+      PORT: 3003
+      DATABASE_URL: postgresql://postgres:123123@postgres-db:5432/gymfitness_user?schema=public
+      OPENAI_API_KEY: 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
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    networks:
+      - gymfitness_net
+
+  admin-service:
+    build:
+      context: ./source/backend/admin-service
+      dockerfile: Dockerfile
+    container_name: gymfitness-admin
+    restart: unless-stopped
+    ports:
+      - "3005:3005"
+    environment:
+      PORT: 3005
+      IDENTITY_DB_URL: postgresql://postgres:123123@postgres-db:5432/gymfitness_auth?schema=public
+      USER_DB_URL: postgresql://postgres:123123@postgres-db:5432/gymfitness_user?schema=public
+      TRACKING_DB_URL: postgresql://postgres:123123@postgres-db:5432/gymfitness_tracking?schema=public
+      JWT_SECRET: supersecretjwtkey12345
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    networks:
+      - gymfitness_net
+
+  admin-web:
+    build:
+      context: ./source/admin-web
+      dockerfile: Dockerfile
+    container_name: gymfitness-admin-web
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    networks:
+      - gymfitness_net
+
+volumes:
+  pgdata:
+
+networks:
+  gymfitness_net:
+    driver: bridge
